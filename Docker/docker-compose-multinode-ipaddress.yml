@@ -1,0 +1,49 @@
+version: "3"
+
+networks:
+    private_net:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
+                  gateway: 172.20.0.1
+
+services:
+    geth01:
+        image: geth
+        tty: true
+        networks:
+            private_net:
+                ipv4_address: 172.20.0.2
+        ports:
+            - 8545:8545
+            - 30305:30305
+        container_name: geth01
+        command: geth --networkid 15 --maxpeers 3 --datadir /home/ethereum --http --http.port 8545 --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "admin,eth,debug,miner,net,txpool,personal,web3" --port 30305
+        working_dir: /home/ethereum
+        
+    geth02:
+        image: geth
+        tty: true
+        networks:
+            private_net:
+                ipv4_address: 172.20.0.3
+        ports:
+            - 8546:8546
+            - 30306:30306
+        container_name: geth02
+        command: geth --networkid 15 --maxpeers 3 --datadir /home/ethereum --http --http.port 8546 --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "admin,eth,debug,miner,net,txpool,personal,web3" --port 30306
+        working_dir: /home/ethereum
+
+    geth03:
+        image: geth
+        tty: true
+        networks:
+            private_net:
+                ipv4_address: 172.20.0.4
+        ports:
+            - 8547:8547
+            - 30307:30307
+        container_name: geth03
+        command: geth --networkid 15 --maxpeers 3 --datadir /home/ethereum --http --http.port 8547 --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "admin,eth,debug,miner,net,txpool,personal,web3" --port 30307
+        working_dir: /home/ethereum      
