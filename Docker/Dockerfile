@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install Dependent Packages
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends apt-utils build-essential libgmp3-dev git wget debconf ca-certificates openssl
+RUN apt-get install -y --no-install-recommends apt-utils build-essential libgmp3-dev git wget debconf ca-certificates openssl net-tools tree
 
 # Get the certificates for golang and github access
 ARG cert_location=/usr/local/share/ca-certificates
