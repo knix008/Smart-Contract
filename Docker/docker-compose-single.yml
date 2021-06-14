@@ -8,7 +8,7 @@ services:
             - 8545:8545
             - 30305:30305
         container_name: geth
-        command: geth --networkid 786 --maxpeers 30 --datadir /home/ethereum --http --http.port 8545 --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "admin,eth,debug,miner,net,txpool,personal,web3" --port 30305
+        command: geth --networkid 786 --allow-insecure-unlock --maxpeers 30 --datadir /home/ethereum --http --http.port 8545 --http.addr "0.0.0.0" --http.corsdomain "*" --http.api "admin,eth,debug,miner,net,txpool,personal,web3" --port 30305
         working_dir: /home/ethereum
 
 
