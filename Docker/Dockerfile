@@ -49,3 +49,5 @@ WORKDIR /home/${DATA_STORE}
 COPY ./genesis.json /home/${DATA_STORE}
 # Do not use this line!!! It will generate same enode ID for geth node.
 # RUN geth --datadir "/home/${DATA_STORE}" init /home/${DATA_STORE}/genesis.json
+# Set entry point for "docker run"
+ENTRYPOINT "/bin/bash"
