@@ -47,4 +47,5 @@ RUN /usr/local/bin/geth version
 # Initialize Ethereum go client with "genesis.json" file
 WORKDIR /home/${DATA_STORE}
 COPY ./genesis.json /home/${DATA_STORE}
-RUN geth --datadir "/home/${DATA_STORE}" init /home/${DATA_STORE}/genesis.json
+# Do not use this line!!! It will generate same enode ID for geth node.
+# RUN geth --datadir "/home/${DATA_STORE}" init /home/${DATA_STORE}/genesis.json
