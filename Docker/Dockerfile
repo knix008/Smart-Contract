@@ -51,4 +51,3 @@ WORKDIR /home/${DATA_STORE}
 COPY ./genesis.json /home/${DATA_STORE}
 # Do not use this!!!
 #RUN geth --datadir "/home/${DATA_STORE}" init /home/${DATA_STORE}/genesis.json
-ENTRYPOINT "/bin/bash"
