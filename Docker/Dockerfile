@@ -47,5 +47,5 @@ RUN mkdir /home/${DATA_STORE}
 RUN /usr/local/bin/geth version
 
 # Copy Ethereum go client with "genesis.json" file
-WORKDIR /home/${DATA_STORE}
-COPY ./genesis.json /home/${DATA_STORE}
+# WORKDIR /home/${DATA_STORE}
+# COPY ./genesis.json /home/${DATA_STORE}
