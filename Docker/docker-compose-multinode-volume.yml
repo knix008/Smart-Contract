@@ -1,0 +1,50 @@
+version: "3"
+
+networks:
+  private:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  geth01:
+    image: geth
+    volumes:
+      - ./geth01:/home/ethereum
+    tty: true
+    networks:
+      private:
+        ipv4_address: 172.20.0.2
+    ports:
+      - 8545:8545
+    container_name: geth01
+    command: geth --identity 'geth01' --datadir /home/ethereum --allow-insecure-unlock --nodiscover --http --http.port 8545 --http.addr '0.0.0.0' --http.corsdomain '*' --http.api 'admin,eth,debug,miner,net,txpool,personal,web3' --port 30303
+    working_dir: /home/ethereum
+
+  geth02:
+    image: geth
+    volumes:
+      - ./geth02:/home/ethereum
+    tty: true
+    networks:
+      private:
+        ipv4_address: 172.20.0.3
+    ports:
+      - 8546:8545
+    container_name: geth02
+    command: geth --identity 'geth02' --datadir /home/ethereum --allow-insecure-unlock --nodiscover --http --http.port 8545 --http.addr '0.0.0.0' --http.corsdomain '*' --http.api 'admin,eth,debug,miner,net,txpool,personal,web3' --port 30303
+    working_dir: /home/ethereum
+
+  geth03:
+    image: geth
+    volumes:
+      - ./geth03:/home/ethereum
+    tty: true
+    networks:
+      private:
+          ipv4_address: 172.20.0.4
+    ports:
+      - 8547:8545
+    container_name: geth03
+    command: geth --identity 'geth03' --datadir /home/ethereum --allow-insecure-unlock --nodiscover --http --http.port 8545 --http.addr '0.0.0.0' --http.corsdomain '*' --http.api 'admin,eth,debug,miner,net,txpool,personal,web3' --port 30303
+    working_dir: /home/ethereum
