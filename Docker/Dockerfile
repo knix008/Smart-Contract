@@ -42,8 +42,10 @@ RUN make all
 RUN cp build/bin/* /usr/local/bin/
 WORKDIR /home
 RUN rm -rf go-ethereum
-ENV DATA_STORE ethereum
-RUN mkdir /home/${DATA_STORE}
+
+# Make directory for geth node.
+#ENV DATA_STORE ethereum
+#RUN mkdir /home/${DATA_STORE}
 RUN /usr/local/bin/geth version
 
 # Copy Ethereum go client with "genesis.json" file
