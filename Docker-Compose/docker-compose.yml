@@ -1,0 +1,47 @@
+version: "3"
+
+networks:
+  private:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  geth01:
+    image: geth
+    volumes:
+      - ./node1:/home/ethereum
+    networks:
+      private:
+        ipv4_address: 172.20.0.2
+    ports:
+      - 8545:8545
+    container_name: geth01
+    command: geth --identity 'geth01' --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain '*' --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0xBe1F0126DbDeC69d22b5CF07AA939dE792b8825f" --password password1.txt
+    working_dir: /home/ethereum
+
+  geth02:
+    image: geth
+    volumes:
+      - ./node2:/home/ethereum
+    networks:
+      private:
+        ipv4_address: 172.20.0.3
+    ports:
+      - 8546:8545
+    container_name: geth02
+    command: geth --identity 'geth02' --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain '*' --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0x53350Fe0d0D69f14adbc1b54B46971552B0FEaA8" --password password2.txt
+    working_dir: /home/ethereum
+
+  geth03:
+    image: geth
+    volumes:
+      - ./node3:/home/ethereum
+    networks:
+      private:
+        ipv4_address: 172.20.0.4
+    ports:
+      - 8547:8545
+    container_name: geth03
+    command: geth --identity 'geth03' --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain '*' --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0x7829FD00a73979985057CdbC66551655de5c5980" --password password3.txt
+    working_dir: /home/ethereum

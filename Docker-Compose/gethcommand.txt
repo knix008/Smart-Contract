@@ -1,0 +1,5 @@
+geth --identity ‘geth01’ --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain ‘*’ --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0xBe1F0126DbDeC69d22b5CF07AA939dE792b8825f" --password password1.txt
+
+geth --identity 'geth02' --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain '*' --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0x53350Fe0d0D69f14adbc1b54B46971552B0FEaA8" --password password2.txt
+
+geth --identity 'geth03' --nousb --datadir /home/ethereum --nodiscover --syncmode full --port 30303 --miner.gasprice 0 --miner.gastarget 470000000000 --http --http.addr 0.0.0.0 --http.corsdomain '*' --http.port 8545 --http.api admin,eth,miner,net,txpool,personal,web3 --mine --allow-insecure-unlock --unlock "0x7829FD00a73979985057CdbC66551655de5c5980" --password password3.txt
