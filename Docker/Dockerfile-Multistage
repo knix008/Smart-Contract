@@ -29,7 +29,7 @@ ENV PATH ${GOPATH}/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p $GOPATH/src $GOPATH/bin
 RUN mkdir -p /usr/local/go
 RUN wget https://dl.google.com/go/go${GO_VERSION}.${GO_OS}-${GO_ARCH}.tar.gz
-RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.${GO_OS}-${GO_ARCH}.tar.gz
 RUN rm go${GO_VERSION}.${GO_OS}-${GO_ARCH}.tar.gz
 RUN go version
 
