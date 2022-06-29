@@ -19,8 +19,12 @@ RUN openssl s_client -showcerts -connect proxy.golang.org:443 </dev/null 2>/dev/
 RUN update-ca-certificates
 
 # Install the latest version of Golang
+# For Go 1.18.3
+# ENV GO_VERSION 1.18.3
 ENV GO_VERSION 1.16.5
 ENV GO_OS linux
+# For MacOS Apple M1
+# ENV GO_ARCH arm64
 ENV GO_ARCH amd64
 ENV GOPATH /go
 ENV GOROOT /usr/local/go
