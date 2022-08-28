@@ -8,7 +8,7 @@ import "./ConvertLib.sol";
 // It is not ERC20 compatible and cannot be expected to talk to other
 // coin/token contracts.
 
-contract MetaCoin {
+contract MyCoin {
 	mapping (address => uint) balances;
 
 	event Transfer(address indexed _from, address indexed _to, uint256 _value);
