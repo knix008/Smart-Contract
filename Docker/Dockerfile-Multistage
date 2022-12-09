@@ -1,9 +1,10 @@
+# Stage I.
 # To run this file use "docker build -t geth . --network=host"
-FROM ubuntu:20.04
+FROM ubuntu AS BUILD
 
 # Non Interactive Mode
 ENV DEBIAN_FRONTEND noninteractive 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <PUBKEY>
+
 # Install Dependent Packages
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils build-essential libgmp3-dev git wget debconf ca-certificates openssl net-tools tree inetutils-ping vim
@@ -18,8 +19,12 @@ RUN openssl s_client -showcerts -connect proxy.golang.org:443 </dev/null 2>/dev/
 RUN update-ca-certificates
 
 # Install the latest version of Golang
+# For Go 1.18.3
+# ENV GO_VERSION 1.18.3
 ENV GO_VERSION 1.16.5
 ENV GO_OS linux
+# For MacOS Apple M1
+# ENV GO_ARCH arm64
 ENV GO_ARCH amd64
 ENV GOPATH /go
 ENV GOROOT /usr/local/go
@@ -51,3 +56,9 @@ RUN /usr/local/bin/geth version
 # Copy Ethereum go client with "genesis.json" file
 #WORKDIR /home/${DATA_STORE}
 #COPY ./genesis.json /home/${DATA_STORE}
+
+# Stage II.
+FROM ubuntu
+COPY --from=BUILD /usr/local/bin/geth /usr/local/bin/
+RUN /usr/local/bin/geth version
+#CMD ["/usr/local/bin/geth", "version"]
