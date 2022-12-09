@@ -1,9 +1,9 @@
 # To run this file use "docker build -t geth . --network=host"
-FROM ubuntu
+FROM ubuntu:20.04
 
 # Non Interactive Mode
 ENV DEBIAN_FRONTEND noninteractive 
-
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <PUBKEY>
 # Install Dependent Packages
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils build-essential libgmp3-dev git wget debconf ca-certificates openssl net-tools tree inetutils-ping vim
