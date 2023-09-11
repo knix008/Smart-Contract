@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.21;
 
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Greeter is Ownable {
     string private _greeting = "Hello, World!";
@@ -15,4 +15,3 @@ contract Greeter is Ownable {
         _greeting = greeting;
     }
 }
-
