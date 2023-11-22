@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MyToken is ERC20, ERC20Burnable, Ownable {
     constructor() ERC20("MyToken", "MTK") {
-        _mint(msg.sender, 1 * 10 ** decimals());
+        _mint(msg.sender, 1000 * 10 ** decimals());
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
@@ -15,6 +15,6 @@ contract MyToken is ERC20, ERC20Burnable, Ownable {
     }
     
     function decimals() public view virtual override returns (uint8) {
-        return 2;
+        return 18;
     }
 }
