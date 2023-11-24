@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts@4.9.3/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts@4.9.3/access/Ownable.sol";
 
-contract MyToken is ERC721, ERC721URIStorage, Ownable {
-    constructor(address initialOwner)
+contract MyToken is ERC721URIStorage, Ownable {
+    constructor()
         ERC721("MyToken", "MTK")
-        Ownable(initialOwner)
+        Ownable()
     {}
 
     function safeMint(address to, uint256 tokenId, string memory uri)
@@ -23,7 +22,7 @@ contract MyToken is ERC721, ERC721URIStorage, Ownable {
     function tokenURI(uint256 tokenId)
         public
         view
-        override(ERC721, ERC721URIStorage)
+        override(ERC721URIStorage)
         returns (string memory)
     {
         return super.tokenURI(tokenId);
@@ -32,7 +31,7 @@ contract MyToken is ERC721, ERC721URIStorage, Ownable {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721URIStorage)
+        override(ERC721URIStorage)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
