@@ -1,0 +1,18 @@
+{
+    "name": "web3js-example",
+    "version": "1.0.0",
+    "description": "",
+    "main": "tokenTransfer.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@kaiachain/ethers-ext": "^1.0.0",
+        "@kaiachain/web3js-ext": "^1.0.0",
+        "dotenv": "^16.3.1",
+        "ganache": "^7.9.1"
+    }
+}
