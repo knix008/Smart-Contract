@@ -44,12 +44,21 @@ fi
 
 # Check if Prysm is installed
 check_prysm() {
-    if ! command -v prysm &> /dev/null; then
-        echo -e "${YELLOW}Prysm not found. Installing Prysm...${NC}"
-        install_prysm
-    else
-        echo -e "${GREEN}Prysm found${NC}"
+    # First check if prysm.sh script exists
+    if [ -f "./prysm.sh" ]; then
+        echo -e "${GREEN}Prysm installation script found${NC}"
+        return 0
     fi
+    
+    # Then check if prysm command is available
+    if command -v prysm &> /dev/null; then
+        echo -e "${GREEN}Prysm found in PATH${NC}"
+        return 0
+    fi
+    
+    # If neither exists, download the script
+    echo -e "${YELLOW}Prysm not found. Installing Prysm...${NC}"
+    install_prysm
 }
 
 # Install Prysm
