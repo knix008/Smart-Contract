@@ -20,14 +20,15 @@
 <body>
     <div class="container">
         <h1>Private Ethereum Network Explorer</h1>
+        <p style="color: #666; font-size: 12px;">Last updated: <script>document.write(new Date().toLocaleString());</script></p>
         
         <div class="network-info">
             <h3>Network Information</h3>
             <p><strong>Network ID:</strong> 3151908</p>
             <p><strong>Chain ID:</strong> 3151908</p>
             <p><strong>Block Time:</strong> ~12 seconds</p>
-            <p><strong>Status:</strong> <span id="networkStatus">Checking...</span></p>
-            <p><strong>Note:</strong> Browser CORS restrictions may prevent direct testing. Use the curl commands below to verify connectivity.</p>
+                <p><strong>Status:</strong> <span id="networkStatus">Checking...</span></p>
+                <p><strong>Note:</strong> Buttons use an API server to fetch real data from Ethereum nodes, bypassing CORS restrictions.</p>
         </div>
         
         <h2>Geth Nodes</h2>
@@ -105,19 +106,20 @@
             resultDiv.innerHTML = '<p>Testing connection...</p>';
             
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'net_version',
-                        params: [],
-                        id: 1
-                    }),
-                    mode: 'cors'
-                });
+                // Extract port from URL and use API server
+                const port = url.split(':').pop();
+                const apiUrl = `http://localhost:8082/api/net_version/${port}`;
+                
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                resultDiv.innerHTML = '<div class="success">Connected successfully! Network ID: ' + data.result + '</div>';
+                
+                if (data.result) {
+                    resultDiv.innerHTML = '<div class="success">Connected successfully! Network ID: ' + data.result + '</div>';
+                } else if (data.error) {
+                    resultDiv.innerHTML = '<div class="error">Connection failed: ' + data.error + '</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">Connected but got unexpected response</div>';
+                }
             } catch (error) {
                 console.log('Connection test error:', error);
                 resultDiv.innerHTML = '<div class="error">Connection failed: ' + error.message + '</div>';
@@ -129,47 +131,55 @@
             resultDiv.innerHTML = '<p>Fetching latest block...</p>';
             
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'eth_getBlockByNumber',
-                        params: ['latest', false],
-                        id: 1
-                    }),
-                    mode: 'cors'
-                });
+                // Extract port from URL and use API server
+                const port = url.split(':').pop();
+                const apiUrl = `http://localhost:8082/api/latest_block/${port}`;
+                
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                const block = data.result;
-                resultDiv.innerHTML = '<div class="success">Latest block: #' + parseInt(block.number, 16) + 
-                    '<br>Hash: ' + block.hash + 
-                    '<br>Timestamp: ' + new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString() + '</div>';
+                
+                if (data.result) {
+                    const block = data.result;
+                    const blockNumber = parseInt(block.number, 16);
+                    const timestamp = new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString();
+                    const gasUsed = parseInt(block.gasUsed, 16);
+                    const gasLimit = parseInt(block.gasLimit, 16);
+                    
+                    resultDiv.innerHTML = '<div class="success">' +
+                        '<strong>Latest Block: #' + blockNumber + '</strong><br>' +
+                        'Hash: ' + block.hash + '<br>' +
+                        'Timestamp: ' + timestamp + '<br>' +
+                        'Gas Used: ' + gasUsed.toLocaleString() + ' / ' + gasLimit.toLocaleString() + '<br>' +
+                        'Transactions: ' + (block.transactions ? block.transactions.length : 0) +
+                        '</div>';
+                } else if (data.error) {
+                    resultDiv.innerHTML = '<div class="error">Failed to get block: ' + data.error + '</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">Failed to get block: Unknown error</div>';
+                }
             } catch (error) {
                 console.log('Block fetch error:', error);
-                resultDiv.innerHTML = '<div class="error">Failed to fetch block: ' + error.message + '</div>';
+                resultDiv.innerHTML = '<div class="error">Block request failed: ' + error.message + '</div>';
             }
         }
         
         // Check network status on page load
         async function checkNetworkStatus() {
             try {
-                const response = await fetch('http://localhost:32801', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'net_version',
-                        params: [],
-                        id: 1
-                    }),
-                    mode: 'cors'
-                });
+                // Test the first node via API server
+                const response = await fetch('http://localhost:8082/api/net_version/32801');
                 const data = await response.json();
-                document.getElementById('networkStatus').innerHTML = '<span style="color: green;">Network is running</span>';
+                
+                if (data.result) {
+                    document.getElementById('networkStatus').innerHTML = '<span style="color: green;">Network is running (ID: ' + data.result + ') - Use buttons below for detailed testing</span>';
+                } else if (data.error) {
+                    document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network status: ' + data.error + '</span>';
+                } else {
+                    document.getElementById('networkStatus').innerHTML = '<span style="color: orange;">Network check failed - Use test buttons below</span>';
+                }
             } catch (error) {
                 console.log('Network check error:', error);
-                document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network check failed: ' + error.message + '</span>';
+                document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network status: Cannot connect to API server - Make sure it is running</span>';
             }
         }
         

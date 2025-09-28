@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Ethereum Network Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testAllNodes()">Test All Nodes</button>
+    
+    <script>
+        async function testAllNodes() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info">Testing network connectivity...</div>';
+            
+            const nodes = [
+                { name: 'Node 1', url: 'http://localhost:32801' },
+                { name: 'Node 2', url: 'http://localhost:32803' },
+                { name: 'Node 3', url: 'http://localhost:32805' }
+            ];
+            
+            let results = '';
+            
+            for (const node of nodes) {
+                results += `<h3>${node.name}</h3>`;
+                
+                try {
+                    // Test 1: Network version
+                    const response1 = await fetch(node.url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'net_version',
+                            params: [],
+                            id: 1
+                        })
+                    });
+                    const data1 = await response1.json();
+                    results += `<div class="success">Network ID: ${data1.result}</div>`;
+                    
+                    // Test 2: Block number
+                    const response2 = await fetch(node.url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'eth_blockNumber',
+                            params: [],
+                            id: 2
+                        })
+                    });
+                    const data2 = await response2.json();
+                    const blockNumber = parseInt(data2.result, 16);
+                    results += `<div class="success">Latest Block: ${blockNumber}</div>`;
+                    
+                } catch (error) {
+                    results += `<div class="error">Error: ${error.message}</div>`;
+                }
+            }
+            
+            resultsDiv.innerHTML = results;
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            testAllNodes();
+        };
+    </script>
+</body>
+</html>

@@ -28,12 +28,18 @@ if [ ! -f "block-explorer.html" ]; then
     exit 1
 fi
 
-# Kill any existing HTTP server on port 8080
+# Kill any existing HTTP servers
 pkill -f "python3 -m http.server 8080" 2>/dev/null || true
+pkill -f "python3 api-server.py" 2>/dev/null || true
+
+# Start API server in the background
+echo "Starting API server on port 8082..."
+cd /home/shkwon/Projects/Smart-Contract/Ethereum
+chmod +x api-server.py
+python3 api-server.py &
 
 # Start HTTP server in the background
 echo "Starting HTTP server on port 8080..."
-cd /home/shkwon/Projects/Smart-Contract/Ethereum
 python3 -m http.server 8080 &
 
 # Wait a moment for server to start
@@ -46,4 +52,6 @@ echo "  - geth-1: http://localhost:32801"
 echo "  - geth-2: http://localhost:32803" 
 echo "  - geth-3: http://localhost:32805"
 echo ""
-echo "To stop the web server, run: pkill -f 'python3 -m http.server 8080'"
+echo "To stop the web servers, run:"
+echo "  pkill -f 'python3 -m http.server 8080'"
+echo "  pkill -f 'python3 api-server.py'"
