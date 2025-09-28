@@ -8,14 +8,18 @@
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
     "deploy:test": "npx hardhat run scripts/deploy.js --network localhost",
     "verify": "npx hardhat verify --network localhost",
-    "test": "npx hardhat test"
+    "test": "npx hardhat test",
+    "interact": "npx hardhat run scripts/interact.js --network kurtosis",
+    "simple-test": "npx hardhat run scripts/simple-test.js --network kurtosis",
+    "web3-test": "node scripts/web3-test.js"
   },
   "devDependencies": {
     "hardhat": "^2.26.3"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@openzeppelin/contracts": "^5.4.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "web3": "^4.16.0"
   },
   "keywords": [
     "ethereum",

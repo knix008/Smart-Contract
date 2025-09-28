@@ -94,7 +94,7 @@ fi
 # Check for Dora block explorer
 echo ""
 echo "🔍 Block Explorer:"
-DORA_URL="http://127.0.0.1:32999"
+DORA_URL="http://127.0.0.1:32826"
 
 if [ -n "$DORA_URL" ]; then
     echo "  🌐 Dora Explorer: $DORA_URL"

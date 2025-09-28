@@ -75,10 +75,13 @@ You can modify `network_params.yaml` to:
 
 ### 1. Network Management Scripts
 
-- **`start-network.sh`**: Starts the Kurtosis network
+- **`start-network.sh`**: Starts the Kurtosis network with automatic block explorer setup
+  - Automatically starts Dora and Blockscout block explorers
+  - Tests connections and provides status reports
+  - Includes comprehensive service management
 - **`stop-network.sh`**: Stops all running enclaves
 - **`test-network.sh`**: Tests network connectivity and functionality
-- **`network-status.sh`**: Shows detailed network status
+- **`network-status.sh`**: Shows detailed network status with current port mappings
 
 ### 2. API Server (`api-server.py`)
 
@@ -119,13 +122,13 @@ python3 api-server.py
 ### 4. Block Explorers
 
 #### Dora Explorer
-- **URL:** `http://127.0.0.1:32999`
+- **URL:** `http://127.0.0.1:32826` (current port)
 - **Features:** Lightweight beacon chain explorer
 - **Best for:** Quick blockchain overview and basic exploration
 
 #### Blockscout Explorer
 - **Frontend:** `http://127.0.0.1:3000`
-- **API:** `http://127.0.0.1:33002`
+- **API:** `http://127.0.0.1:32829` (dynamic port)
 - **Features:** Full-featured block explorer with transaction analysis, smart contract verification
 - **Best for:** Advanced analytics, contract verification, detailed transaction tracking
 
@@ -163,12 +166,53 @@ curl http://localhost:5000/rpc/eth_blockNumber
 1. Open `block-explorer.html` in your browser
 2. Open `network-test.html` for comprehensive testing
 3. Access the block explorers:
-   - **Dora:** `http://127.0.0.1:32999`
+   - **Dora:** `http://127.0.0.1:32826`
    - **Blockscout:** `http://127.0.0.1:3000`
 
-### 4. Smart Contract Deployment
+### 4. Smart Contract Testing
 
-Your ERC20 token contract is ready for deployment:
+Your ERC20 token contract is deployed and ready for testing with comprehensive JavaScript test scripts:
+
+#### Available Test Scripts
+
+**Basic Contract Test:**
+```bash
+cd SmartContract
+npm run simple-test
+```
+- Tests basic contract functionality
+- Shows token information and balances
+- Tests transfer operations
+- Uses Hardhat framework
+
+**Comprehensive Interaction Test:**
+```bash
+npm run interact
+```
+- Tests all ERC20 standard functions
+- Tests ERC20Permit functionality
+- Shows recent events and network info
+- Comprehensive error handling
+
+**Direct RPC Test:**
+```bash
+npm run web3-test
+```
+- Direct web3.js connection to Kurtosis network
+- No Hardhat dependency required
+- Shows contract creation details
+- Tests contract ABI interaction
+
+#### Test Results Summary
+- ✅ **Contract Name**: MyERC20Token
+- ✅ **Symbol**: MTK
+- ✅ **Total Supply**: 1,000 MTK
+- ✅ **Deployer Balance**: 990 MTK
+- ✅ **Transfer Functionality**: Working
+- ✅ **Event Logging**: Active
+- ✅ **Network Connection**: Stable
+
+### 5. Smart Contract Deployment
 
 ```solidity
 // MyERC20Token.sol
@@ -180,6 +224,28 @@ contract MyERC20Token is ERC20, ERC20Permit {
         _mint(recipient, 1000 * 10 ** decimals());
     }
 }
+```
+
+**Deployment Status:**
+- ✅ **Contract Deployed**: `0x78C9506af12dEc8bf37a91b2dadE16D07Ff39Dd2`
+- ✅ **Network**: Kurtosis Ethereum (Chain ID: 585858)
+- ✅ **Total Supply**: 1,000 MTK
+- ✅ **Deployer Balance**: 990 MTK (after test transfers)
+- ✅ **RPC URL**: `http://127.0.0.1:32800`
+- ✅ **Block Explorer**: `http://127.0.0.1:32826` (Dora)
+
+**Test Your Contract:**
+```bash
+# Navigate to SmartContract directory
+cd SmartContract
+
+# Run comprehensive tests
+npm run simple-test    # Basic contract test
+npm run interact      # Full ERC20 + ERC20Permit test
+npm run web3-test     # Direct RPC test
+
+# Deploy to Kurtosis Network (if needed)
+npx hardhat run scripts/deploy.js --network kurtosis
 ```
 
 ## 🛠️ Development Workflow
@@ -195,7 +261,7 @@ python3 api-server.py  # In another terminal
 - **Block Explorer**: Open `block-explorer.html`
 - **Test Suite**: Open `network-test.html`
 - **API Server**: http://localhost:5000
-- **Dora Explorer**: http://127.0.0.1:32999
+- **Dora Explorer**: http://127.0.0.1:32826
 - **Blockscout Explorer**: http://127.0.0.1:3000
 
 ### 3. Deploy and Test Contracts
@@ -251,24 +317,27 @@ python3 api-server.py  # In another terminal
 
 ## 🌐 Network Access Points
 
-### RPC Endpoints
-- **Node 1:** `http://127.0.0.1:32973`
-- **Node 2:** `http://127.0.0.1:32978`
-- **Node 3:** `http://127.0.0.1:32983`
+### RPC Endpoints (Dynamic Ports)
+- **Node 1:** `http://127.0.0.1:32800` (check `./network-status.sh` for current ports)
+- **Node 2:** `http://127.0.0.1:32810`
+- **Node 3:** `http://127.0.0.1:32805`
 
-### WebSocket Endpoints
-- **Node 1:** `ws://127.0.0.1:32974`
-- **Node 2:** `ws://127.0.0.1:32979`
-- **Node 3:** `ws://127.0.0.1:32984`
+### WebSocket Endpoints (Dynamic Ports)
+- **Node 1:** `ws://127.0.0.1:32801` (check `./network-status.sh` for current ports)
+- **Node 2:** `ws://127.0.0.1:32811`
+- **Node 3:** `ws://127.0.0.1:32806`
 
 ### Block Explorers
-- **Dora:** `http://127.0.0.1:32999`
+- **Dora:** `http://127.0.0.1:32826`
 - **Blockscout Frontend:** `http://127.0.0.1:3000`
-- **Blockscout API:** `http://127.0.0.1:33002`
+- **Blockscout API:** `http://127.0.0.1:32829`
 
-### Additional Services
-- **Blockscout PostgreSQL:** `postgresql://127.0.0.1:33000`
-- **Blockscout Verifier:** `http://127.0.0.1:33001`
+### Additional Services (Dynamic Ports)
+- **Blockscout PostgreSQL:** `postgresql://127.0.0.1:32827` (check `./network-status.sh` for current ports)
+- **Blockscout Verifier:** `http://127.0.0.1:32828`
+
+### 📝 Note on Dynamic Ports
+Kurtosis assigns dynamic ports to avoid conflicts. Use `./network-status.sh` to get the current port mappings for your running network.
 
 ## 📚 Additional Resources
 

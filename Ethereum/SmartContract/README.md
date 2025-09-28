@@ -1,6 +1,6 @@
 # MyERC20Token Smart Contract
 
-A simple ERC20 token implementation using OpenZeppelin contracts, deployed on a local Ethereum network using Hardhat.
+A comprehensive ERC20 token implementation using OpenZeppelin contracts, deployed on Kurtosis Ethereum network with full testing capabilities.
 
 ## 📋 Overview
 
@@ -39,27 +39,34 @@ This project contains a basic ERC20 token contract (`MyERC20Token`) with the fol
 
 ## 🚀 Quick Start
 
-### 1. Start Local Network
+### 1. Prerequisites
 
-Start a local Hardhat node:
+Ensure the Kurtosis network is running:
 ```bash
-npx hardhat node
+# From the main Ethereum directory
+./start-network.sh
 ```
 
-This will start a local Ethereum network on `http://127.0.0.1:8545` with 20 pre-funded accounts.
+### 2. Test Your Contract
 
-### 2. Deploy Contract
+The contract is already deployed and ready for testing:
 
-In a new terminal, deploy the contract:
 ```bash
-npx hardhat run scripts/deploy.js --network localhost
+# Basic contract test
+npm run simple-test
+
+# Comprehensive interaction test
+npm run interact
+
+# Direct RPC test (no Hardhat required)
+npm run web3-test
 ```
 
-### 3. Interact with Contract
+### 3. Deploy to Kurtosis Network (if needed)
 
-To interact with a deployed contract:
 ```bash
-CONTRACT_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3 npx hardhat run scripts/interact.js --network localhost
+# Deploy to Kurtosis network
+npx hardhat run scripts/deploy.js --network kurtosis
 ```
 
 ## 📁 Project Structure
@@ -70,50 +77,69 @@ SmartContract/
 │   └── MyERC20Token.sol          # Main ERC20 token contract
 ├── scripts/
 │   ├── deploy.js                 # Deployment script
-│   └── interact.js               # Interaction script
+│   ├── interact.js               # Comprehensive interaction script
+│   ├── simple-test.js            # Basic contract test
+│   └── web3-test.js              # Direct RPC test
 ├── deployments/                  # Deployment information
 │   └── deployment-*.json         # Deployment details
 ├── hardhat.config.js             # Hardhat configuration
 ├── package.json                  # Dependencies and scripts
+├── TEST_SCRIPTS.md               # Test scripts documentation
 └── README.md                     # This file
 ```
 
 ## 🔧 Available Scripts
 
+### Development Scripts
 - `npm run compile` - Compile smart contracts
-- `npm run deploy` - Deploy to localhost network
+- `npm run deploy` - Deploy to Kurtosis network
 - `npm run test` - Run tests (if any)
-- `npx hardhat node` - Start local network
-- `npx hardhat console` - Open Hardhat console
+
+### Testing Scripts
+- `npm run simple-test` - Basic contract functionality test
+- `npm run interact` - Comprehensive ERC20 + ERC20Permit test
+- `npm run web3-test` - Direct RPC connection test
+
+### Hardhat Commands
+- `npx hardhat console --network kurtosis` - Open Hardhat console
+- `npx hardhat run scripts/deploy.js --network kurtosis` - Deploy contract
 
 ## 🌐 Network Configuration
 
-### Localhost Network
-- **RPC URL**: `http://127.0.0.1:8545`
-- **Chain ID**: `31337`
-- **Accounts**: 20 pre-funded accounts with 10,000 ETH each
+### Kurtosis Network (Current)
+- **RPC URL**: `http://127.0.0.1:32800`
+- **Chain ID**: `585858`
+- **Block Explorer**: `http://127.0.0.1:32826` (Dora)
+- **Network Type**: Private Ethereum network with multiple nodes
 
-### Default Accounts
-The local network provides 20 pre-funded accounts:
-- Account #0: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (Deployer)
-- Account #1: `0x70997970C51812dc3A010C7d01b50e0d17dc79C8`
-- Account #2: `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`
-- ... and 17 more accounts
+### Network Access Points
+- **Node 1**: `http://127.0.0.1:32800` (Primary RPC)
+- **Node 2**: `http://127.0.0.1:32810`
+- **Node 3**: `http://127.0.0.1:32805`
+- **WebSocket**: `ws://127.0.0.1:32801`
+
+### Pre-funded Accounts
+The Kurtosis network provides pre-funded accounts:
+- Account #0: `0xAe95d8DA9244C37CaC0a3e16BA966a8e852Bb6D6` (Deployer)
+- Account #1: `0x7ff1a4c1d57e5e784d327c4c7651e952350bc271f156afb3d00d20f5ef924856`
+- Account #2: `0x3a91003acaf4c21b3953d94fa4a6db694fa69e5242b2e37be05dd82761058899`
 
 ## 📊 Contract Information
 
 ### Deployment Details
-- **Contract Address**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
-- **Deployer**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`
-- **Transaction Hash**: `0xb885a3baa7922d31b639148ee3970623d1a3fca0a83c89318475e17540d5a099`
-- **Block Number**: 1
+- **Contract Address**: `0x78C9506af12dEc8bf37a91b2dadE16D07Ff39Dd2`
+- **Deployer**: `0xAe95d8DA9244C37CaC0a3e16BA966a8e852Bb6D6`
+- **Transaction Hash**: `0x7ea46ae9260d6703ff8c60f844e28e27f0cfad852a3b4e1f4866ae90c3e0ece4`
+- **Block Number**: 92
+- **Network**: Kurtosis Ethereum (Chain ID: 585858)
 
 ### Token Details
 - **Name**: MyERC20Token
 - **Symbol**: MTK
 - **Decimals**: 18
 - **Total Supply**: 1,000 MTK
-- **Deployer Balance**: 1,000 MTK
+- **Deployer Balance**: 990 MTK (after test transfers)
+- **Current Block**: 272+
 
 ## 🔍 Contract Functions
 
@@ -131,25 +157,65 @@ The local network provides 20 pre-funded accounts:
 
 ## 🧪 Testing
 
-### Manual Testing
-1. Start the local network: `npx hardhat node`
-2. Deploy the contract: `npx hardhat run scripts/deploy.js --network localhost`
-3. Interact with the contract using the interaction script
+### Automated Test Scripts
 
-### Console Testing
+The project includes comprehensive test scripts for different use cases:
+
+#### 1. Basic Contract Test
 ```bash
-npx hardhat console --network localhost
+npm run simple-test
+```
+**Features:**
+- Tests basic contract functionality
+- Shows token information and balances
+- Tests transfer operations
+- Uses Hardhat framework
+
+#### 2. Comprehensive Interaction Test
+```bash
+npm run interact
+```
+**Features:**
+- Tests all ERC20 standard functions
+- Tests ERC20Permit functionality
+- Shows recent events and network info
+- Comprehensive error handling
+
+#### 3. Direct RPC Test
+```bash
+npm run web3-test
+```
+**Features:**
+- Direct web3.js connection to Kurtosis network
+- No Hardhat dependency required
+- Shows contract creation details
+- Tests contract ABI interaction
+
+### Manual Testing
+
+#### Hardhat Console
+```bash
+npx hardhat console --network kurtosis
 ```
 
 Then in the console:
 ```javascript
 // Get contract instance
-const contract = await ethers.getContractAt("MyERC20Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+const contract = await ethers.getContractAt("MyERC20Token", "0x78C9506af12dEc8bf37a91b2dadE16D07Ff39Dd2");
 
 // Check balance
-const balance = await contract.balanceOf("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+const balance = await contract.balanceOf("0xAe95d8DA9244C37CaC0a3e16BA966a8e852Bb6D6");
 console.log("Balance:", ethers.formatEther(balance), "MTK");
 ```
+
+### Test Results Summary
+- ✅ **Contract Name**: MyERC20Token
+- ✅ **Symbol**: MTK
+- ✅ **Total Supply**: 1,000 MTK
+- ✅ **Deployer Balance**: 990 MTK
+- ✅ **Transfer Functionality**: Working
+- ✅ **Event Logging**: Active
+- ✅ **Network Connection**: Stable
 
 ## 📝 Deployment Information
 
@@ -170,16 +236,40 @@ Deployment information is automatically saved to the `deployments/` directory in
 ### Common Issues
 
 1. **"Cannot connect to network"**
-   - Make sure the Hardhat node is running: `npx hardhat node`
-   - Check the RPC URL in `hardhat.config.js`
+   - Make sure the Kurtosis network is running: `./start-network.sh`
+   - Check the RPC URL in `hardhat.config.js` (should be `http://127.0.0.1:32800`)
+   - Verify network status: `./network-status.sh`
 
 2. **"Sender doesn't have enough funds"**
-   - Ensure you're using the default Hardhat accounts
-   - Check that the local network is running
+   - Ensure you're using the Kurtosis network accounts
+   - Check that the Kurtosis network is running and funded
+   - Verify account balance in test scripts
 
 3. **"Module not found" errors**
    - Run `npm install` to install dependencies
-   - Make sure `@nomicfoundation/hardhat-toolbox` is installed
+   - Make sure `@nomicfoundation/hardhat-toolbox` and `web3` are installed
+
+4. **Test scripts failing**
+   - Ensure Kurtosis network is running
+   - Check that the contract is deployed
+   - Verify the contract address in scripts
+
+### Network Issues
+
+1. **Kurtosis network not starting**
+   ```bash
+   # Check Docker status
+   docker info
+   
+   # Stop and restart Kurtosis
+   ./stop-network.sh
+   ./start-network.sh
+   ```
+
+2. **Block explorer not accessible**
+   - Check Dora explorer: `http://127.0.0.1:32826`
+   - Check Blockscout: `http://127.0.0.1:3000`
+   - Use `./network-status.sh` for current port mappings
 
 ### Node.js Version Warning
 If you see warnings about Node.js version, consider using Node.js v16 or v18 for better compatibility with Hardhat.

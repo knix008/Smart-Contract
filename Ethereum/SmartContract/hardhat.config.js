@@ -16,8 +16,8 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 31337
     },
-    node2: {
-      url: "http://127.0.0.1:32978",
+    kurtosis: {
+      url: "http://127.0.0.1:32800",
       chainId: 585858,
       accounts: [
         "0x27515f805127bebad2fb9b183508bdacb8c763da16f54e0678b16e8f28ef3fff",
@@ -25,8 +25,17 @@ module.exports = {
         "0x3a91003acaf4c21b3953d94fa4a6db694fa69e5242b2e37be05dd82761058899"
       ]
     },
-    node3: {
-      url: "http://127.0.0.1:32983",
+    kurtosisNode2: {
+      url: "http://127.0.0.1:32810",
+      chainId: 585858,
+      accounts: [
+        "0x27515f805127bebad2fb9b183508bdacb8c763da16f54e0678b16e8f28ef3fff",
+        "0x7ff1a4c1d57e5e784d327c4c7651e952350bc271f156afb3d00d20f5ef924856",
+        "0x3a91003acaf4c21b3953d94fa4a6db694fa69e5242b2e37be05dd82761058899"
+      ]
+    },
+    kurtosisNode3: {
+      url: "http://127.0.0.1:32805",
       chainId: 585858,
       accounts: [
         "0x27515f805127bebad2fb9b183508bdacb8c763da16f54e0678b16e8f28ef3fff",

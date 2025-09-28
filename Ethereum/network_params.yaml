@@ -8,3 +8,4 @@ network_params:
   network_id: "585858"
 additional_services:
   - dora
+  - blockscout
