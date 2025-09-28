@@ -7,7 +7,7 @@ import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20P
 
 contract MyERC20Token is ERC20, ERC20Permit {
     constructor(address recipient)
-        ERC20("MyERC20Token", "SHK")
+        ERC20("MyERC20Token", "MTK")
         ERC20Permit("MyERC20Token")
     {
         _mint(recipient, 1000 * 10 ** decimals());

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Ethereum Network Explorer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .node { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+        .endpoint { font-family: monospace; background: #e9ecef; padding: 8px; border-radius: 4px; display: inline-block; margin: 5px 0; }
+        .test-btn { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin: 5px 0; }
+        .test-btn:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .network-info { background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Private Ethereum Network Explorer</h1>
+        
+        <div class="network-info">
+            <h3>Network Information</h3>
+            <p><strong>Network ID:</strong> 3151908</p>
+            <p><strong>Chain ID:</strong> 3151908</p>
+            <p><strong>Block Time:</strong> ~12 seconds</p>
+            <p><strong>Status:</strong> <span id="networkStatus">Checking...</span></p>
+            <p><strong>Note:</strong> Browser CORS restrictions may prevent direct testing. Use the curl commands below to verify connectivity.</p>
+        </div>
+        
+        <h2>Geth Nodes</h2>
+        
+        <div class="node">
+            <h3>Geth Node 1</h3>
+            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32801</span></p>
+            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32802</span></p>
+            <button class="test-btn" onclick="testConnection('http://localhost:32801', 'result1')">Test Connection</button>
+            <button class="test-btn" onclick="getLatestBlock('http://localhost:32801', 'result1')">Get Latest Block</button>
+            <div id="result1" class="result"></div>
+        </div>
+        
+        <div class="node">
+            <h3>Geth Node 2</h3>
+            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32803</span></p>
+            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32804</span></p>
+            <button class="test-btn" onclick="testConnection('http://localhost:32803', 'result2')">Test Connection</button>
+            <button class="test-btn" onclick="getLatestBlock('http://localhost:32803', 'result2')">Get Latest Block</button>
+            <div id="result2" class="result"></div>
+        </div>
+        
+        <div class="node">
+            <h3>Geth Node 3</h3>
+            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32805</span></p>
+            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32806</span></p>
+            <button class="test-btn" onclick="testConnection('http://localhost:32805', 'result3')">Test Connection</button>
+            <button class="test-btn" onclick="getLatestBlock('http://localhost:32805', 'result3')">Get Latest Block</button>
+            <div id="result3" class="result"></div>
+        </div>
+        
+        <h2>How to Connect</h2>
+        <div class="node">
+            <h3>MetaMask Setup</h3>
+            <p>1. Open MetaMask</p>
+            <p>2. Click on network dropdown</p>
+            <p>3. Select "Add Network"</p>
+            <p>4. Enter the following details:</p>
+            <ul>
+                <li><strong>Network Name:</strong> Private Ethereum</li>
+                <li><strong>RPC URL:</strong> http://localhost:32801</li>
+                <li><strong>Chain ID:</strong> 3151908</li>
+                <li><strong>Currency Symbol:</strong> ETH</li>
+            </ul>
+        </div>
+        
+        <div class="node">
+            <h3>Remix IDE</h3>
+            <p>1. Go to <a href="https://remix.ethereum.org" target="_blank">remix.ethereum.org</a></p>
+            <p>2. Click on "Deploy & Run Transactions" tab</p>
+            <p>3. Select "Web3 Provider" as environment</p>
+            <p>4. Enter: http://localhost:32801</p>
+        </div>
+        
+        <h2>Test Network Connectivity</h2>
+        <div class="node">
+            <h3>Command Line Testing</h3>
+            <p>Use these curl commands to test the network from terminal:</p>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; margin: 10px 0;">
+                <p><strong>Test Network ID:</strong></p>
+                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}' http://localhost:32801</p>
+                <br>
+                <p><strong>Get Latest Block:</strong></p>
+                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://localhost:32801</p>
+                <br>
+                <p><strong>Get Block Details:</strong></p>
+                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["latest",false],"id":1}' http://localhost:32801</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function testConnection(url, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '<p>Testing connection...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'net_version',
+                        params: [],
+                        id: 1
+                    }),
+                    mode: 'cors'
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = '<div class="success">Connected successfully! Network ID: ' + data.result + '</div>';
+            } catch (error) {
+                console.log('Connection test error:', error);
+                resultDiv.innerHTML = '<div class="error">Connection failed: ' + error.message + '</div>';
+            }
+        }
+        
+        async function getLatestBlock(url, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '<p>Fetching latest block...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'eth_getBlockByNumber',
+                        params: ['latest', false],
+                        id: 1
+                    }),
+                    mode: 'cors'
+                });
+                const data = await response.json();
+                const block = data.result;
+                resultDiv.innerHTML = '<div class="success">Latest block: #' + parseInt(block.number, 16) + 
+                    '<br>Hash: ' + block.hash + 
+                    '<br>Timestamp: ' + new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString() + '</div>';
+            } catch (error) {
+                console.log('Block fetch error:', error);
+                resultDiv.innerHTML = '<div class="error">Failed to fetch block: ' + error.message + '</div>';
+            }
+        }
+        
+        // Check network status on page load
+        async function checkNetworkStatus() {
+            try {
+                const response = await fetch('http://localhost:32801', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'net_version',
+                        params: [],
+                        id: 1
+                    }),
+                    mode: 'cors'
+                });
+                const data = await response.json();
+                document.getElementById('networkStatus').innerHTML = '<span style="color: green;">Network is running</span>';
+            } catch (error) {
+                console.log('Network check error:', error);
+                document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network check failed: ' + error.message + '</span>';
+            }
+        }
+        
+        // Load network status when page loads
+        checkNetworkStatus();
+    </script>
+</body>
+</html>
