@@ -1,190 +1,468 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Private Ethereum Network Explorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Private Network Explorer</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .node { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
-        .endpoint { font-family: monospace; background: #e9ecef; padding: 8px; border-radius: 4px; display: inline-block; margin: 5px 0; }
-        .test-btn { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin: 5px 0; }
-        .test-btn:hover { background: #0056b3; }
-        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
-        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        h1 { color: #333; text-align: center; }
-        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-        .network-info { background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .status-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .status-item .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .block-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .block-info h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .block-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #7f8c8d;
+            word-break: break-all;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Private Ethereum Network Explorer</h1>
-        <p style="color: #666; font-size: 12px;">Last updated: <script>document.write(new Date().toLocaleString());</script></p>
-        
-        <div class="network-info">
-            <h3>Network Information</h3>
-            <p><strong>Network ID:</strong> 3151908</p>
-            <p><strong>Chain ID:</strong> 3151908</p>
-            <p><strong>Block Time:</strong> ~12 seconds</p>
-                <p><strong>Status:</strong> <span id="networkStatus">Checking...</span></p>
-                <p><strong>Note:</strong> Buttons use an API server to fetch real data from Ethereum nodes, bypassing CORS restrictions.</p>
+        <div class="header">
+            <h1>🔍 Ethereum Private Network Explorer</h1>
+            <p>Monitor and interact with your Kurtosis Ethereum network</p>
         </div>
-        
-        <h2>Geth Nodes</h2>
-        
-        <div class="node">
-            <h3>Geth Node 1</h3>
-            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32801</span></p>
-            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32802</span></p>
-            <button class="test-btn" onclick="testConnection('http://localhost:32801', 'result1')">Test Connection</button>
-            <button class="test-btn" onclick="getLatestBlock('http://localhost:32801', 'result1')">Get Latest Block</button>
-            <div id="result1" class="result"></div>
-        </div>
-        
-        <div class="node">
-            <h3>Geth Node 2</h3>
-            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32803</span></p>
-            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32804</span></p>
-            <button class="test-btn" onclick="testConnection('http://localhost:32803', 'result2')">Test Connection</button>
-            <button class="test-btn" onclick="getLatestBlock('http://localhost:32803', 'result2')">Get Latest Block</button>
-            <div id="result2" class="result"></div>
-        </div>
-        
-        <div class="node">
-            <h3>Geth Node 3</h3>
-            <p><strong>HTTP RPC:</strong> <span class="endpoint">http://localhost:32805</span></p>
-            <p><strong>WebSocket:</strong> <span class="endpoint">ws://localhost:32806</span></p>
-            <button class="test-btn" onclick="testConnection('http://localhost:32805', 'result3')">Test Connection</button>
-            <button class="test-btn" onclick="getLatestBlock('http://localhost:32805', 'result3')">Get Latest Block</button>
-            <div id="result3" class="result"></div>
-        </div>
-        
-        <h2>How to Connect</h2>
-        <div class="node">
-            <h3>MetaMask Setup</h3>
-            <p>1. Open MetaMask</p>
-            <p>2. Click on network dropdown</p>
-            <p>3. Select "Add Network"</p>
-            <p>4. Enter the following details:</p>
-            <ul>
-                <li><strong>Network Name:</strong> Private Ethereum</li>
-                <li><strong>RPC URL:</strong> http://localhost:32801</li>
-                <li><strong>Chain ID:</strong> 3151908</li>
-                <li><strong>Currency Symbol:</strong> ETH</li>
-            </ul>
-        </div>
-        
-        <div class="node">
-            <h3>Remix IDE</h3>
-            <p>1. Go to <a href="https://remix.ethereum.org" target="_blank">remix.ethereum.org</a></p>
-            <p>2. Click on "Deploy & Run Transactions" tab</p>
-            <p>3. Select "Web3 Provider" as environment</p>
-            <p>4. Enter: http://localhost:32801</p>
-        </div>
-        
-        <h2>Test Network Connectivity</h2>
-        <div class="node">
-            <h3>Command Line Testing</h3>
-            <p>Use these curl commands to test the network from terminal:</p>
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; margin: 10px 0;">
-                <p><strong>Test Network ID:</strong></p>
-                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}' http://localhost:32801</p>
-                <br>
-                <p><strong>Get Latest Block:</strong></p>
-                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://localhost:32801</p>
-                <br>
-                <p><strong>Get Block Details:</strong></p>
-                <p>curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["latest",false],"id":1}' http://localhost:32801</p>
+
+        <div class="status-card">
+            <h2>📊 Network Status</h2>
+            <div class="status-grid" id="statusGrid">
+                <div class="status-item">
+                    <h3>Network Status</h3>
+                    <div class="value" id="networkStatus">Loading...</div>
+                </div>
+                <div class="status-item">
+                    <h3>Current Block</h3>
+                    <div class="value" id="currentBlock">-</div>
+                </div>
+                <div class="status-item">
+                    <h3>Network ID</h3>
+                    <div class="value" id="networkId">-</div>
+                </div>
+                <div class="status-item">
+                    <h3>Peer Count</h3>
+                    <div class="value" id="peerCount">-</div>
+                </div>
             </div>
         </div>
+
+        <div class="controls">
+            <button class="btn btn-success" onclick="refreshStatus()">🔄 Refresh Status</button>
+            <button class="btn" onclick="openExplorer()">🌐 Open Dora Explorer</button>
+            <button class="btn btn-warning" onclick="testNetwork()">🧪 Test Network</button>
+            <a href="http://localhost:5000" class="btn" target="_blank">📡 API Server</a>
+        </div>
+
+        <div class="block-info">
+            <h2>🔍 Block Search</h2>
+            <input type="number" class="search-box" id="blockNumber" placeholder="Enter block number..." min="0">
+            <button class="btn" onclick="searchBlock()">Search Block</button>
+            <div id="blockDetails"></div>
+        </div>
+
+        <div class="block-info">
+            <h2>📝 Transaction Search</h2>
+            <input type="text" class="search-box" id="txHash" placeholder="Enter transaction hash...">
+            <button class="btn" onclick="searchTransaction()">Search Transaction</button>
+            <div id="transactionDetails"></div>
+        </div>
     </div>
-    
+
     <script>
-        async function testConnection(url, resultId) {
-            const resultDiv = document.getElementById(resultId);
-            resultDiv.innerHTML = '<p>Testing connection...</p>';
-            
-            try {
-                // Extract port from URL and use API server
-                const port = url.split(':').pop();
-                const apiUrl = `http://localhost:8082/api/net_version/${port}`;
-                
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.result) {
-                    resultDiv.innerHTML = '<div class="success">Connected successfully! Network ID: ' + data.result + '</div>';
-                } else if (data.error) {
-                    resultDiv.innerHTML = '<div class="error">Connection failed: ' + data.error + '</div>';
-                } else {
-                    resultDiv.innerHTML = '<div class="error">Connected but got unexpected response</div>';
-                }
-            } catch (error) {
-                console.log('Connection test error:', error);
-                resultDiv.innerHTML = '<div class="error">Connection failed: ' + error.message + '</div>';
-            }
-        }
+        const API_BASE = 'http://localhost:5000';
         
-        async function getLatestBlock(url, resultId) {
-            const resultDiv = document.getElementById(resultId);
-            resultDiv.innerHTML = '<p>Fetching latest block...</p>';
-            
+        // Load initial status
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshStatus();
+        });
+
+        async function refreshStatus() {
             try {
-                // Extract port from URL and use API server
-                const port = url.split(':').pop();
-                const apiUrl = `http://localhost:8082/api/latest_block/${port}`;
-                
-                const response = await fetch(apiUrl);
+                const response = await fetch(`${API_BASE}/status`);
                 const data = await response.json();
                 
-                if (data.result) {
-                    const block = data.result;
-                    const blockNumber = parseInt(block.number, 16);
-                    const timestamp = new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString();
-                    const gasUsed = parseInt(block.gasUsed, 16);
-                    const gasLimit = parseInt(block.gasLimit, 16);
+                if (data.status === 'running') {
+                    document.getElementById('networkStatus').textContent = '🟢 Running';
+                    document.getElementById('networkStatus').style.color = '#27ae60';
                     
-                    resultDiv.innerHTML = '<div class="success">' +
-                        '<strong>Latest Block: #' + blockNumber + '</strong><br>' +
-                        'Hash: ' + block.hash + '<br>' +
-                        'Timestamp: ' + timestamp + '<br>' +
-                        'Gas Used: ' + gasUsed.toLocaleString() + ' / ' + gasLimit.toLocaleString() + '<br>' +
-                        'Transactions: ' + (block.transactions ? block.transactions.length : 0) +
-                        '</div>';
-                } else if (data.error) {
-                    resultDiv.innerHTML = '<div class="error">Failed to get block: ' + data.error + '</div>';
+                    if (data.network_info.current_block) {
+                        document.getElementById('currentBlock').textContent = data.network_info.current_block;
+                    }
+                    
+                    if (data.network_info.network_id) {
+                        document.getElementById('networkId').textContent = data.network_info.network_id;
+                    }
+                    
+                    if (data.network_info.peer_count !== undefined) {
+                        document.getElementById('peerCount').textContent = data.network_info.peer_count;
+                    }
                 } else {
-                    resultDiv.innerHTML = '<div class="error">Failed to get block: Unknown error</div>';
+                    document.getElementById('networkStatus').textContent = '🔴 Not Running';
+                    document.getElementById('networkStatus').style.color = '#e74c3c';
                 }
             } catch (error) {
-                console.log('Block fetch error:', error);
-                resultDiv.innerHTML = '<div class="error">Block request failed: ' + error.message + '</div>';
+                document.getElementById('networkStatus').textContent = '❌ Error';
+                document.getElementById('networkStatus').style.color = '#e74c3c';
+                console.error('Error fetching status:', error);
             }
         }
-        
-        // Check network status on page load
-        async function checkNetworkStatus() {
+
+        async function searchBlock() {
+            const blockNumber = document.getElementById('blockNumber').value;
+            if (!blockNumber) {
+                alert('Please enter a block number');
+                return;
+            }
+
+            const detailsDiv = document.getElementById('blockDetails');
+            detailsDiv.innerHTML = '<div class="loading">Loading block information...</div>';
+
             try {
-                // Test the first node via API server
-                const response = await fetch('http://localhost:8082/api/net_version/32801');
+                const response = await fetch(`${API_BASE}/block/${blockNumber}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    detailsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else if (data.result) {
+                    const block = data.result;
+                    detailsDiv.innerHTML = `
+                        <div class="block-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Block Number</div>
+                                <div class="detail-value">${parseInt(block.number, 16)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Hash</div>
+                                <div class="detail-value">${block.hash}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Parent Hash</div>
+                                <div class="detail-value">${block.parentHash}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Timestamp</div>
+                                <div class="detail-value">${new Date(parseInt(block.timestamp, 16) * 1000).toLocaleString()}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Gas Used</div>
+                                <div class="detail-value">${parseInt(block.gasUsed, 16)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Gas Limit</div>
+                                <div class="detail-value">${parseInt(block.gasLimit, 16)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Transaction Count</div>
+                                <div class="detail-value">${block.transactions.length}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = '<div class="error">Block not found</div>';
+                }
+            } catch (error) {
+                detailsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function searchTransaction() {
+            const txHash = document.getElementById('txHash').value;
+            if (!txHash) {
+                alert('Please enter a transaction hash');
+                return;
+            }
+
+            const detailsDiv = document.getElementById('transactionDetails');
+            detailsDiv.innerHTML = '<div class="loading">Loading transaction information...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/transaction/${txHash}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    detailsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else if (data.result) {
+                    const tx = data.result;
+                    detailsDiv.innerHTML = `
+                        <div class="block-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Hash</div>
+                                <div class="detail-value">${tx.hash}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">From</div>
+                                <div class="detail-value">${tx.from}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">To</div>
+                                <div class="detail-value">${tx.to || 'Contract Creation'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Value</div>
+                                <div class="detail-value">${parseInt(tx.value, 16) / 1e18} ETH</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Gas</div>
+                                <div class="detail-value">${parseInt(tx.gas, 16)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Gas Price</div>
+                                <div class="detail-value">${parseInt(tx.gasPrice, 16)} wei</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Block Number</div>
+                                <div class="detail-value">${parseInt(tx.blockNumber, 16)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Transaction Index</div>
+                                <div class="detail-value">${parseInt(tx.transactionIndex, 16)}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = '<div class="error">Transaction not found</div>';
+                }
+            } catch (error) {
+                detailsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function openExplorer() {
+            try {
+                const response = await fetch(`${API_BASE}/explorer`);
+                const data = await response.json();
+                
+                if (data.explorer_url) {
+                    window.open(data.explorer_url, '_blank');
+                } else {
+                    alert('Block explorer not available');
+                }
+            } catch (error) {
+                alert('Error getting explorer URL: ' + error.message);
+            }
+        }
+
+        async function testNetwork() {
+            try {
+                const response = await fetch(`${API_BASE}/rpc/eth_blockNumber`);
                 const data = await response.json();
                 
                 if (data.result) {
-                    document.getElementById('networkStatus').innerHTML = '<span style="color: green;">Network is running (ID: ' + data.result + ') - Use buttons below for detailed testing</span>';
-                } else if (data.error) {
-                    document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network status: ' + data.error + '</span>';
+                    const blockNumber = parseInt(data.result, 16);
+                    alert(`✅ Network is working! Current block: ${blockNumber}`);
                 } else {
-                    document.getElementById('networkStatus').innerHTML = '<span style="color: orange;">Network check failed - Use test buttons below</span>';
+                    alert('❌ Network test failed');
                 }
             } catch (error) {
-                console.log('Network check error:', error);
-                document.getElementById('networkStatus').innerHTML = '<span style="color: red;">Network status: Cannot connect to API server - Make sure it is running</span>';
+                alert('❌ Network test failed: ' + error.message);
             }
         }
-        
-        // Load network status when page loads
-        checkNetworkStatus();
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshStatus, 30000);
     </script>
 </body>
 </html>

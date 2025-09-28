@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# Script to start the private PoS Ethereum network using Kurtosis
+# Start Ethereum Private Network with Kurtosis
+# This script starts a private Ethereum network using Kurtosis
 
 set -e
 
-echo "🚀 Starting private PoS Ethereum network..."
+echo "🚀 Starting Ethereum Private Network with Kurtosis..."
 
-# Check if Kurtosis CLI is installed
+# Check if Kurtosis is installed
 if ! command -v kurtosis &> /dev/null; then
-    echo "❌ Kurtosis CLI is not installed. Please run ./scripts/install-kurtosis.sh first."
+    echo "❌ Kurtosis is not installed. Please run ./install-kurtosis.sh first."
     exit 1
 fi
 
@@ -19,22 +20,11 @@ if ! docker info &> /dev/null; then
 fi
 
 # Start the network
-echo "🌐 Launching private PoS Ethereum network..."
-kurtosis run .
+echo "📡 Starting network with configuration from network_params.yaml..."
+kurtosis run github.com/ethpandaops/ethereum-package --args-file ./network_params.yaml --image-download always
 
 echo "✅ Network started successfully!"
 echo ""
-echo "📋 Useful commands:"
-echo "  - View running enclaves: kurtosis enclave ls"
-echo "  - Stop the network: kurtosis enclave stop <enclave-name>"
-echo "  - View logs: kurtosis enclave logs <enclave-name>"
-echo "  - Connect to a node: kurtosis enclave shell <enclave-name> <service-name>"
-echo ""
-echo "🔗 Network details:"
-echo "  - Network ID: 3151908"
-echo "  - Chain ID: 3151908"
-echo "  - Genesis delay: 10 seconds"
-echo "  - 3 Geth nodes for execution layer"
-echo "  - Lighthouse nodes for consensus layer"
-echo "  - Dora Explorer: http://localhost:3000"
-echo "  - Blockscout Explorer: http://localhost:4000"
+echo "🔍 To view network status, run: ./network-status.sh"
+echo "🧪 To test the network, run: ./test-network.sh"
+echo "🛑 To stop the network, run: ./stop-network.sh"

@@ -1,27 +1,111 @@
 #!/bin/bash
 
-# Script to install Kurtosis CLI on Ubuntu/Debian systems
-# This script adds the Kurtosis APT repository and installs the CLI
+# Install Kurtosis and dependencies
+# This script installs Kurtosis and required dependencies for Ethereum development
 
 set -e
 
-echo "🚀 Installing Kurtosis CLI..."
+echo "🔧 Installing Kurtosis and Dependencies"
+echo "======================================"
 
-# Add Kurtosis APT repository
-echo "📦 Adding Kurtosis APT repository..."
-echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
+# Check if running on Linux
+if [[ "$OSTYPE" != "linux-gnu"* ]]; then
+    echo "❌ This script is designed for Linux. Please install Kurtosis manually."
+    echo "📖 Visit: https://docs.kurtosis.com/install"
+    exit 1
+fi
 
-# Update package list
-echo "🔄 Updating package list..."
-sudo apt update
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    echo "🐳 Installing Docker..."
+    
+    # Update package index
+    sudo apt-get update
+    
+    # Install required packages
+    sudo apt-get install -y \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
+    
+    # Add Docker's official GPG key
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    
+    # Set up the repository
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    
+    # Install Docker Engine
+    sudo apt-get update
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    # Add user to docker group
+    sudo usermod -aG docker $USER
+    
+    echo "✅ Docker installed successfully!"
+    echo "⚠️  Please log out and log back in for Docker group changes to take effect."
+else
+    echo "✅ Docker is already installed"
+fi
 
-# Install Kurtosis CLI
-echo "⬇️  Installing Kurtosis CLI..."
-sudo apt install -y kurtosis-cli
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "📦 Installing jq..."
+    sudo apt-get update
+    sudo apt-get install -y jq
+    echo "✅ jq installed successfully!"
+else
+    echo "✅ jq is already installed"
+fi
 
-# Verify installation
-echo "✅ Verifying installation..."
-kurtosis version
+# Install Kurtosis
+if ! command -v kurtosis &> /dev/null; then
+    echo "🚀 Installing Kurtosis..."
+    
+    # Download and install Kurtosis
+    curl -fsSL https://docs.kurtosis.com/install-linux.sh | bash
+    
+    # Add to PATH if not already there
+    if ! echo "$PATH" | grep -q "$HOME/.kurtosis/bin"; then
+        echo 'export PATH="$HOME/.kurtosis/bin:$PATH"' >> ~/.bashrc
+        export PATH="$HOME/.kurtosis/bin:$PATH"
+    fi
+    
+    echo "✅ Kurtosis installed successfully!"
+else
+    echo "✅ Kurtosis is already installed"
+fi
 
-echo "🎉 Kurtosis CLI installed successfully!"
-echo "You can now run 'kurtosis run .' to start your private Ethereum network."
+# Verify installations
+echo ""
+echo "🔍 Verifying installations..."
+
+if command -v docker &> /dev/null; then
+    echo "✅ Docker: $(docker --version)"
+else
+    echo "❌ Docker installation failed"
+fi
+
+if command -v jq &> /dev/null; then
+    echo "✅ jq: $(jq --version)"
+else
+    echo "❌ jq installation failed"
+fi
+
+if command -v kurtosis &> /dev/null; then
+    echo "✅ Kurtosis: $(kurtosis version)"
+else
+    echo "❌ Kurtosis installation failed"
+fi
+
+echo ""
+echo "🎉 Installation completed!"
+echo ""
+echo "📝 Next steps:"
+echo "  1. If Docker was just installed, log out and log back in"
+echo "  2. Start the network: ./start-network.sh"
+echo "  3. Check network status: ./network-status.sh"
+echo "  4. Test the network: ./test-network.sh"

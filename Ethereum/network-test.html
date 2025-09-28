@@ -1,80 +1,561 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Network Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Network Test Suite</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
-        .info { background: #d1ecf1; color: #0c5460; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .test-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .test-item .status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .test-item .status.pending {
+            color: #f39c12;
+        }
+
+        .test-item .status.success {
+            color: #27ae60;
+        }
+
+        .test-item .status.error {
+            color: #e74c3c;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .result-box.success {
+            border-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .result-box.error {
+            border-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Ethereum Network Test</h1>
-    
-    <div id="results"></div>
-    
-    <button onclick="testAllNodes()">Test All Nodes</button>
-    
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Ethereum Network Test Suite</h1>
+            <p>Comprehensive testing for your Kurtosis Ethereum network</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-success" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="btn" onclick="runBasicTests()">🔍 Basic Tests</button>
+            <button class="btn" onclick="runAdvancedTests()">⚡ Advanced Tests</button>
+            <button class="btn btn-warning" onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Basic Connectivity Tests</h2>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h3>API Server Connection</h3>
+                    <div class="status pending" id="apiStatus">Pending</div>
+                    <button class="btn" onclick="testAPIConnection()">Test</button>
+                    <div class="result-box" id="apiResult" style="display: none;"></div>
+                </div>
+
+                <div class="test-item">
+                    <h3>Network Status</h3>
+                    <div class="status pending" id="networkStatus">Pending</div>
+                    <button class="btn" onclick="testNetworkStatus()">Test</button>
+                    <div class="result-box" id="networkResult" style="display: none;"></div>
+                </div>
+
+                <div class="test-item">
+                    <h3>RPC Endpoint</h3>
+                    <div class="status pending" id="rpcStatus">Pending</div>
+                    <button class="btn" onclick="testRPCEndpoint()">Test</button>
+                    <div class="result-box" id="rpcResult" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>⚡ Advanced Network Tests</h2>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h3>Block Production</h3>
+                    <div class="status pending" id="blockStatus">Pending</div>
+                    <button class="btn" onclick="testBlockProduction()">Test</button>
+                    <div class="result-box" id="blockResult" style="display: none;"></div>
+                </div>
+
+                <div class="test-item">
+                    <h3>Peer Connectivity</h3>
+                    <div class="status pending" id="peerStatus">Pending</div>
+                    <button class="btn" onclick="testPeerConnectivity()">Test</button>
+                    <div class="result-box" id="peerResult" style="display: none;"></div>
+                </div>
+
+                <div class="test-item">
+                    <h3>Transaction Pool</h3>
+                    <div class="status pending" id="txPoolStatus">Pending</div>
+                    <button class="btn" onclick="testTransactionPool()">Test</button>
+                    <div class="result-box" id="txPoolResult" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Performance Tests</h2>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h3>Response Time</h3>
+                    <div class="status pending" id="responseStatus">Pending</div>
+                    <button class="btn" onclick="testResponseTime()">Test</button>
+                    <div class="result-box" id="responseResult" style="display: none;"></div>
+                </div>
+
+                <div class="test-item">
+                    <h3>Concurrent Requests</h3>
+                    <div class="status pending" id="concurrentStatus">Pending</div>
+                    <button class="btn" onclick="testConcurrentRequests()">Test</button>
+                    <div class="result-box" id="concurrentResult" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        async function testAllNodes() {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<div class="info">Testing network connectivity...</div>';
+        const API_BASE = 'http://localhost:5000';
+        let testResults = {};
+
+        function updateProgress() {
+            const totalTests = Object.keys(testResults).length;
+            const completedTests = Object.values(testResults).filter(result => 
+                result.status === 'success' || result.status === 'error'
+            ).length;
             
-            const nodes = [
-                { name: 'Node 1', url: 'http://localhost:32801' },
-                { name: 'Node 2', url: 'http://localhost:32803' },
-                { name: 'Node 3', url: 'http://localhost:32805' }
-            ];
+            const progress = totalTests > 0 ? (completedTests / totalTests) * 100 : 0;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function setTestStatus(testId, status, message = '') {
+            const statusElement = document.getElementById(testId + 'Status');
+            const resultElement = document.getElementById(testId + 'Result');
             
-            let results = '';
+            statusElement.textContent = message || status;
+            statusElement.className = 'status ' + status;
             
-            for (const node of nodes) {
-                results += `<h3>${node.name}</h3>`;
-                
-                try {
-                    // Test 1: Network version
-                    const response1 = await fetch(node.url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            jsonrpc: '2.0',
-                            method: 'net_version',
-                            params: [],
-                            id: 1
-                        })
-                    });
-                    const data1 = await response1.json();
-                    results += `<div class="success">Network ID: ${data1.result}</div>`;
-                    
-                    // Test 2: Block number
-                    const response2 = await fetch(node.url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            jsonrpc: '2.0',
-                            method: 'eth_blockNumber',
-                            params: [],
-                            id: 2
-                        })
-                    });
-                    const data2 = await response2.json();
-                    const blockNumber = parseInt(data2.result, 16);
-                    results += `<div class="success">Latest Block: ${blockNumber}</div>`;
-                    
-                } catch (error) {
-                    results += `<div class="error">Error: ${error.message}</div>`;
-                }
+            if (resultElement) {
+                resultElement.style.display = 'block';
             }
             
-            resultsDiv.innerHTML = results;
+            testResults[testId] = { status, message };
+            updateProgress();
         }
-        
-        // Auto-test on page load
-        window.onload = function() {
-            testAllNodes();
-        };
+
+        function showResult(testId, result, isError = false) {
+            const resultElement = document.getElementById(testId + 'Result');
+            resultElement.textContent = JSON.stringify(result, null, 2);
+            resultElement.className = 'result-box ' + (isError ? 'error' : 'success');
+            resultElement.style.display = 'block';
+        }
+
+        async function testAPIConnection() {
+            setTestStatus('api', 'pending', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                const data = await response.json();
+                
+                setTestStatus('api', 'success', '✅ Connected');
+                showResult('api', data);
+            } catch (error) {
+                setTestStatus('api', 'error', '❌ Failed');
+                showResult('api', { error: error.message }, true);
+            }
+        }
+
+        async function testNetworkStatus() {
+            setTestStatus('network', 'pending', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const data = await response.json();
+                
+                if (data.status === 'running') {
+                    setTestStatus('network', 'success', '✅ Running');
+                } else {
+                    setTestStatus('network', 'error', '❌ Not Running');
+                }
+                showResult('network', data);
+            } catch (error) {
+                setTestStatus('network', 'error', '❌ Failed');
+                showResult('network', { error: error.message }, true);
+            }
+        }
+
+        async function testRPCEndpoint() {
+            setTestStatus('rpc', 'pending', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/rpc/eth_blockNumber`);
+                const data = await response.json();
+                
+                if (data.result) {
+                    const blockNumber = parseInt(data.result, 16);
+                    setTestStatus('rpc', 'success', `✅ Block ${blockNumber}`);
+                } else {
+                    setTestStatus('rpc', 'error', '❌ No Response');
+                }
+                showResult('rpc', data);
+            } catch (error) {
+                setTestStatus('rpc', 'error', '❌ Failed');
+                showResult('rpc', { error: error.message }, true);
+            }
+        }
+
+        async function testBlockProduction() {
+            setTestStatus('block', 'pending', 'Testing...');
+            
+            try {
+                const startResponse = await fetch(`${API_BASE}/rpc/eth_blockNumber`);
+                const startData = await startResponse.json();
+                
+                if (!startData.result) {
+                    throw new Error('Could not get initial block number');
+                }
+                
+                const startBlock = parseInt(startData.result, 16);
+                
+                // Wait 5 seconds for potential block production
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                
+                const endResponse = await fetch(`${API_BASE}/rpc/eth_blockNumber`);
+                const endData = await endResponse.json();
+                const endBlock = parseInt(endData.result, 16);
+                
+                const blocksProduced = endBlock - startBlock;
+                
+                if (blocksProduced > 0) {
+                    setTestStatus('block', 'success', `✅ ${blocksProduced} blocks`);
+                } else {
+                    setTestStatus('block', 'error', '❌ No blocks produced');
+                }
+                
+                showResult('block', {
+                    startBlock,
+                    endBlock,
+                    blocksProduced,
+                    timeElapsed: '5 seconds'
+                });
+            } catch (error) {
+                setTestStatus('block', 'error', '❌ Failed');
+                showResult('block', { error: error.message }, true);
+            }
+        }
+
+        async function testPeerConnectivity() {
+            setTestStatus('peer', 'pending', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/rpc/net_peerCount`);
+                const data = await response.json();
+                
+                if (data.result) {
+                    const peerCount = parseInt(data.result, 16);
+                    if (peerCount > 0) {
+                        setTestStatus('peer', 'success', `✅ ${peerCount} peers`);
+                    } else {
+                        setTestStatus('peer', 'error', '❌ No peers');
+                    }
+                } else {
+                    setTestStatus('peer', 'error', '❌ No response');
+                }
+                showResult('peer', data);
+            } catch (error) {
+                setTestStatus('peer', 'error', '❌ Failed');
+                showResult('peer', { error: error.message }, true);
+            }
+        }
+
+        async function testTransactionPool() {
+            setTestStatus('txPool', 'pending', 'Testing...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/rpc/txpool_status`);
+                const data = await response.json();
+                
+                if (data.result) {
+                    setTestStatus('txPool', 'success', '✅ Available');
+                } else {
+                    setTestStatus('txPool', 'error', '❌ Not available');
+                }
+                showResult('txPool', data);
+            } catch (error) {
+                setTestStatus('txPool', 'error', '❌ Failed');
+                showResult('txPool', { error: error.message }, true);
+            }
+        }
+
+        async function testResponseTime() {
+            setTestStatus('response', 'pending', 'Testing...');
+            
+            try {
+                const startTime = performance.now();
+                const response = await fetch(`${API_BASE}/rpc/eth_blockNumber`);
+                const endTime = performance.now();
+                
+                const responseTime = endTime - startTime;
+                
+                if (responseTime < 1000) {
+                    setTestStatus('response', 'success', `✅ ${responseTime.toFixed(2)}ms`);
+                } else {
+                    setTestStatus('response', 'error', `❌ ${responseTime.toFixed(2)}ms (slow)`);
+                }
+                
+                showResult('response', {
+                    responseTime: responseTime.toFixed(2) + 'ms',
+                    status: responseTime < 1000 ? 'good' : 'slow'
+                });
+            } catch (error) {
+                setTestStatus('response', 'error', '❌ Failed');
+                showResult('response', { error: error.message }, true);
+            }
+        }
+
+        async function testConcurrentRequests() {
+            setTestStatus('concurrent', 'pending', 'Testing...');
+            
+            try {
+                const requests = Array(5).fill().map(() => 
+                    fetch(`${API_BASE}/rpc/eth_blockNumber`)
+                );
+                
+                const startTime = performance.now();
+                const responses = await Promise.all(requests);
+                const endTime = performance.now();
+                
+                const successCount = responses.filter(r => r.ok).length;
+                const totalTime = endTime - startTime;
+                
+                if (successCount === requests.length) {
+                    setTestStatus('concurrent', 'success', `✅ ${successCount}/${requests.length}`);
+                } else {
+                    setTestStatus('concurrent', 'error', `❌ ${successCount}/${requests.length}`);
+                }
+                
+                showResult('concurrent', {
+                    successful: successCount,
+                    total: requests.length,
+                    totalTime: totalTime.toFixed(2) + 'ms',
+                    averageTime: (totalTime / requests.length).toFixed(2) + 'ms'
+                });
+            } catch (error) {
+                setTestStatus('concurrent', 'error', '❌ Failed');
+                showResult('concurrent', { error: error.message }, true);
+            }
+        }
+
+        async function runBasicTests() {
+            clearResults();
+            await testAPIConnection();
+            await testNetworkStatus();
+            await testRPCEndpoint();
+        }
+
+        async function runAdvancedTests() {
+            await testBlockProduction();
+            await testPeerConnectivity();
+            await testTransactionPool();
+        }
+
+        async function runAllTests() {
+            clearResults();
+            await runBasicTests();
+            await runAdvancedTests();
+            await testResponseTime();
+            await testConcurrentRequests();
+        }
+
+        function clearResults() {
+            testResults = {};
+            document.getElementById('progressBar').style.width = '0%';
+            
+            // Reset all statuses
+            const statusElements = document.querySelectorAll('.status');
+            statusElements.forEach(el => {
+                el.textContent = 'Pending';
+                el.className = 'status pending';
+            });
+            
+            // Hide all result boxes
+            const resultElements = document.querySelectorAll('.result-box');
+            resultElements.forEach(el => {
+                el.style.display = 'none';
+            });
+        }
     </script>
 </body>
 </html>

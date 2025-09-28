@@ -1,30 +1,10 @@
-# Network configuration for private PoS Ethereum network
-preregistered_validator_keys_mnemonic: "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art"
-num_validator_keys_per_node: 64
-network_id: "3151908"
-deposit_contract_address: "0x4242424242424242424242424242424242424242"
-seconds_per_slot: 12
-genesis_delay: 10
-capella_fork_epoch: 2
-deneb_fork_epoch: 500
-
-# EL (Execution Layer) configuration
-el_chain_id: 3151908
-el_network_id: 3151908
-
-# CL (Consensus Layer) configuration
-cl_config_name: "minimal"
-cl_config_fork_version: "0x00000069"
-cl_config_genesis_fork_version: "0x00000069"
-cl_config_altair_fork_version: "0x00000070"
-cl_config_bellatrix_fork_version: "0x00000071"
-cl_config_capella_fork_version: "0x00000072"
-cl_config_deneb_fork_version: "0x00000073"
-
-# Validator configuration
-num_validators: 64
-min_gas_price: 1000000000  # 1 gwei
-
-# Explorer configuration
-dora_port: 3000
-blockscout_port: 4000
+participants:
+  - el_type: geth
+    cl_type: lighthouse
+    count: 2
+  - el_type: geth
+    cl_type: teku
+network_params:
+  network_id: "585858"
+additional_services:
+  - dora
