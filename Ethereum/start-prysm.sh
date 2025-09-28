@@ -106,8 +106,8 @@ start_beacon_chain() {
             --p2p-tcp-port="$BEACON_P2P_PORT" \
             --p2p-udp-port="$BEACON_P2P_PORT" \
             --genesis-state="$BEACON_DIR/genesis.ssz" \
-            --accept-terms-of-use \
-    else
+            --accept-terms-of-use
+        else
         prysm beacon-chain \
             --datadir="$BEACON_DIR" \
             --execution-endpoint="$EXECUTION_ENDPOINT" \
@@ -121,21 +121,7 @@ start_beacon_chain() {
             --p2p-udp-port="$BEACON_P2P_PORT" \
             --genesis-state="$BEACON_DIR/genesis.ssz" \
             --accept-terms-of-use
-    else
-        prysm beacon-chain \
-            --datadir="$BEACON_DIR" \
-            --execution-endpoint="$EXECUTION_ENDPOINT" \
-            --jwt-secret="$JWT_SECRET_FILE" \
-            --chain-id="$NETWORK_ID" \
-            --rpc-host="127.0.0.1" \
-            --rpc-port="$BEACON_RPC_PORT" \
-            --grpc-gateway-host="127.0.0.1" \
-            --grpc-gateway-port="$BEACON_GRPC_PORT" \
-            --p2p-tcp-port="$BEACON_P2P_PORT" \
-            --p2p-udp-port="$BEACON_P2P_PORT" \
-            --genesis-state="$BEACON_DIR/genesis.ssz" \
-            --accept-terms-of-use
-    fi
+        fi
 }
 
 # Start Beacon Chain in background
@@ -156,8 +142,8 @@ start_beacon_chain_background() {
             --p2p-udp-port="$BEACON_P2P_PORT" \
             --genesis-state="$BEACON_DIR/genesis.ssz" \
             --accept-terms-of-use \
- \
             > "$NETWORK_DIR/beacon.log" 2>&1 &
+        BEACON_PID=$!
     else
         nohup prysm beacon-chain \
             --datadir="$BEACON_DIR" \
@@ -172,11 +158,10 @@ start_beacon_chain_background() {
             --p2p-udp-port="$BEACON_P2P_PORT" \
             --genesis-state="$BEACON_DIR/genesis.ssz" \
             --accept-terms-of-use \
- \
             > "$NETWORK_DIR/beacon.log" 2>&1 &
+        BEACON_PID=$!
     fi
     
-    BEACON_PID=$!
     echo $BEACON_PID > "$NETWORK_DIR/beacon.pid"
     echo -e "${GREEN}Beacon Chain started in background with PID: $BEACON_PID${NC}"
     echo -e "${BLUE}Log file: $NETWORK_DIR/beacon.log${NC}"
@@ -221,8 +206,8 @@ start_validator_background() {
             --accept-terms-of-use \
             --wallet-dir="$VALIDATOR_DIR/wallet" \
             --wallet-password-file="$NETWORK_DIR/validator_password.txt" \
- \
             > "$NETWORK_DIR/validator.log" 2>&1 &
+        VALIDATOR_PID=$!
     else
         nohup prysm validator \
             --datadir="$VALIDATOR_DIR" \
@@ -232,11 +217,10 @@ start_validator_background() {
             --accept-terms-of-use \
             --wallet-dir="$VALIDATOR_DIR/wallet" \
             --wallet-password-file="$NETWORK_DIR/validator_password.txt" \
- \
             > "$NETWORK_DIR/validator.log" 2>&1 &
+        VALIDATOR_PID=$!
     fi
     
-    VALIDATOR_PID=$!
     echo $VALIDATOR_PID > "$NETWORK_DIR/validator.pid"
     echo -e "${GREEN}Validator started in background with PID: $VALIDATOR_PID${NC}"
     echo -e "${BLUE}Log file: $NETWORK_DIR/validator.log${NC}"

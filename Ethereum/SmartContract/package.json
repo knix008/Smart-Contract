@@ -1,0 +1,35 @@
+{
+  "name": "erc20-smart-contract",
+  "version": "1.0.0",
+  "description": "ERC-20 Token Smart Contract for Private Ethereum Network",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "node deploy.js",
+    "interact": "node interact.js",
+    "test": "node test.js",
+    "compile": "solc --abi --bin MyToken.sol -o build/",
+    "start": "node deploy.js"
+  },
+  "keywords": [
+    "ethereum",
+    "smart-contract",
+    "erc20",
+    "token",
+    "blockchain",
+    "web3"
+  ],
+  "author": "Smart Contract Developer",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "solc": "^0.7.6",
+    "web3": "^4.3.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.9.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

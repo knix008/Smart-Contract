@@ -112,18 +112,20 @@ start_node() {
         --http \
         --http.addr "0.0.0.0" \
         --http.port "$http_port" \
-        --http.api "eth,net,web3,personal,miner,admin,txpool,debug" \
+        --http.api "eth,net,web3,personal,miner,admin,txpool,debug,engine" \
         --http.corsdomain "*" \
+        --http.vhosts "*" \
         --ws \
         --ws.addr "0.0.0.0" \
         --ws.port "$ws_port" \
-        --ws.api "eth,net,web3,personal,miner,admin,txpool,debug" \
+        --ws.api "eth,net,web3,personal,miner,admin,txpool,debug,engine" \
         --ws.origins "*" \
         --authrpc.addr "127.0.0.1" \
         --authrpc.port "$auth_port" \
         --authrpc.jwtsecret "$JWT_SECRET_FILE" \
         --port "$p2p_port" \
         --nodiscover \
+        --allow-insecure-unlock \
         --verbosity 3 \
         $bootnode_arg \
         > "$log_file" 2>&1 &

@@ -8,11 +8,13 @@ This project provides a complete setup for running a **Proof-of-Stake (PoS) Ethe
 - **3 Geth Execution Nodes**: Multiple execution clients for redundancy and load balancing
 - **Prysm Consensus Client**: Complete beacon chain and validator for PoS consensus
 - **Chain ID 1337**: Custom network identifier for private testing
-- **Pre-funded Accounts**: Multiple accounts with initial ETH for testing
+- **8 Pre-funded Accounts**: Multiple accounts with 1000 ETH each for testing
 - **JWT Authentication**: Secure communication between execution and consensus layers
 - **Easy Management**: Simple scripts to start, stop, and manage the network
 - **Background Operation**: Run services in background for development
 - **Comprehensive Logging**: Detailed logs for debugging and monitoring
+- **Process Management**: Automatic PID tracking for proper service management
+- **Smart Contract Support**: Ready for ERC-20 and other smart contract deployment
 
 ## Prerequisites
 
@@ -114,11 +116,17 @@ Ethereum/
 ├── README.md                # This documentation
 └── network/                 # Network data directory (created during setup)
     ├── accounts/            # Account keystores and passwords
-    ├── geth/               # Geth data directory
+    ├── node1/              # Geth node 1 data directory
+    ├── node2/              # Geth node 2 data directory  
+    ├── node3/              # Geth node 3 data directory
     ├── prysm/              # Prysm data directory
-    ├── geth.log            # Geth execution logs
+    ├── node1.log           # Geth node 1 logs
+    ├── node2.log           # Geth node 2 logs
+    ├── node3.log           # Geth node 3 logs
     ├── beacon.log          # Prysm beacon chain logs
     ├── validator.log       # Prysm validator logs
+    ├── beacon.pid          # Beacon chain process ID
+    ├── validator.pid       # Validator process ID
     └── jwt.hex             # JWT secret for client communication
 ```
 
@@ -161,14 +169,18 @@ Ethereum/
 
 ### Pre-funded Accounts
 
-The setup creates 4 accounts with 1000 ETH each:
+The setup creates 8 accounts with 1000 ETH each:
 
-1. **Validator 1**: Primary validator account
-2. **Validator 2**: Secondary validator account  
-3. **User 1**: General user account
-4. **User 2**: General user account
+1. **Account 0**: `0x75ec983bc0bD7d8Cbc4785556D8888E376336586` (Primary validator)
+2. **Account 1**: `0xcC87bbAA011eEbe659D80738Eee3609818fF5b82`
+3. **Account 2**: `0xE69e4B1e16e912A31b468a9FC6981b01e8520446`
+4. **Account 3**: `0xF3762be7b4334a9c833198cDdEFbD719b4Ae3e6F`
+5. **Account 4**: `0x2687F8E50f13f743C9eA43868473A2de16B305eb`
+6. **Account 5**: `0xE377d3a782566cC428f6E73CA1126398282e126B`
+7. **Account 6**: `0x4732394052DdE14a43B86eAe2374959f34134D06`
+8. **Account 7**: `0x2bCcab81f5F2664B1C090A4C5A99Fef1375Aa126`
 
-All accounts use password: `password123`
+All accounts use password: `password`
 
 ## Usage Examples
 
@@ -203,6 +215,12 @@ All accounts use password: `password123`
 # Start only Prysm consensus layer (beacon + validator)
 ./start-prysm.sh start
 
+# Start beacon chain only
+./start-prysm.sh beacon-bg
+
+# Start validator only
+./start-prysm.sh validator-bg
+
 # Check multi-node Geth status
 ./start-multi-geth.sh status
 
@@ -226,6 +244,13 @@ All accounts use password: `password123`
 ./manage-network.sh logs geth
 ./manage-network.sh logs beacon
 ./manage-network.sh logs validator
+
+# View individual node logs
+tail -f ./network/node1.log
+tail -f ./network/node2.log
+tail -f ./network/node3.log
+tail -f ./network/beacon.log
+tail -f ./network/validator.log
 ```
 
 ### Network Cleanup
@@ -289,16 +314,37 @@ web3.eth.getBlock('latest').then(console.log);
 
 ### Smart Contract Development
 
+This network includes a complete ERC-20 smart contract example in the `SmartContract/` directory:
+
 1. **Start the network**
    ```bash
    ./manage-network.sh start
    ```
 
-2. **Deploy contracts** using Remix, Hardhat, or Truffle
+2. **Deploy ERC-20 contract**
+   ```bash
+   cd SmartContract
+   npm install
+   npm run deploy
+   ```
 
-3. **Interact with contracts** using the funded accounts
+3. **Interact with contracts** using the provided scripts:
+   ```bash
+   npm run interact  # Interact with deployed contract
+   npm run test      # Run contract tests
+   ```
 
-4. **Monitor transactions** in the logs
+4. **Deploy custom contracts** using Remix, Hardhat, or Truffle
+
+5. **Monitor transactions** in the logs
+
+### Smart Contract Features
+
+- **ERC-20 Token Contract**: Complete implementation with minting capabilities
+- **Deployment Scripts**: Automated compilation and deployment
+- **Interaction Scripts**: Easy contract interaction and testing
+- **Web3.js Integration**: Ready-to-use Web3.js examples
+- **Account Management**: Pre-funded accounts for testing
 
 ### Testing
 
@@ -373,7 +419,7 @@ web3.eth.getBlock('latest').then(console.log);
 
 1. **Private Keys**: Never use the default accounts in production
 2. **Network Isolation**: This is a private network - not connected to mainnet
-3. **Passwords**: Default password is `password123` - change for production
+3. **Passwords**: Default password is `password` - change for production
 4. **Firewall**: Consider firewall rules if running on public servers
 5. **Backup**: Always backup your keystore files
 
@@ -443,6 +489,7 @@ curl -X POST -H "Content-Type: application/json" \
 - Check if JWT secret file exists: `./network/jwt.hex`
 - Verify execution endpoint is accessible: `http://localhost:8551`
 - Check chain ID compatibility (should be 1337)
+- If database lock error occurs: `rm -rf ./network/prysm/beacon/beaconchaindata`
 
 **Validator Not Running:**
 - Ensure validator wallet is created: `./network/prysm/validator/wallet`
@@ -453,6 +500,11 @@ curl -X POST -H "Content-Type: application/json" \
 - Check if all Geth nodes are running: `./start-multi-geth.sh status`
 - Verify JWT authentication between execution and consensus layers
 - Monitor logs for connection errors
+
+**Status Detection Issues:**
+- If status shows services as "not running" but processes are active, check PID files:
+  - `./network/beacon.pid` and `./network/validator.pid` should contain valid process IDs
+- Restart services using background commands: `./start-prysm.sh beacon-bg` and `./start-prysm.sh validator-bg`
 
 ## Support and Contributing
 
@@ -473,8 +525,28 @@ curl -X POST -H "Content-Type: application/json" \
 
 This project is provided as-is for educational and development purposes. Use at your own risk.
 
+## Recent Updates
+
+### Version 2.0 - Current Release
+
+**Major Improvements:**
+- ✅ Fixed beacon chain and validator startup issues
+- ✅ Corrected PID tracking for proper service management
+- ✅ Updated status detection to accurately show running services
+- ✅ Enhanced script reliability and error handling
+- ✅ Added comprehensive ERC-20 smart contract support
+- ✅ Improved documentation and troubleshooting guides
+
+**Technical Fixes:**
+- Fixed database lock issues in Prysm beacon chain
+- Corrected script syntax errors in `start-prysm.sh`
+- Improved PID file management for background processes
+- Enhanced multi-node Geth configuration
+- Updated account management with 8 pre-funded accounts
+
 ## Acknowledgments
 
 - [Geth Documentation](https://geth.ethereum.org/docs/)
 - [Prysm Documentation](https://docs.prylabs.network/)
 - [Ethereum Foundation](https://ethereum.org/)
+- [OpenZeppelin Contracts](https://openzeppelin.com/contracts/)
