@@ -4,19 +4,15 @@ const solc = require('solc');
 
 // Configuration
 const CONFIG = {
-    // Network configuration
-    RPC_URL: 'http://localhost:8545', // Node 1 RPC endpoint
+    RPC_URL: 'http://localhost:8545',
     CHAIN_ID: 1337,
-    
-    // Token configuration
-    TOKEN_NAME: 'My Private Token',
-    TOKEN_SYMBOL: 'MPT',
-    TOKEN_DECIMALS: 18,
-    INITIAL_SUPPLY: 1000000, // 1 million tokens
-    
-    // Gas configuration
+    CONTRACT_FILE: './SimpleERC20Token.sol',
+    CONTRACT_NAME: 'SimpleERC20Token',
+    INITIAL_SUPPLY: 1000, // 1000 tokens
+    GAS_PRICE: '20000000000', // 20 Gwei
     GAS_LIMIT: 3000000,
-    GAS_PRICE: '20000000000' // 20 gwei
+    // Development private key (DO NOT USE IN PRODUCTION!)
+    PRIVATE_KEY: '0x1234567890123456789012345678901234567890123456789012345678901234'
 };
 
 // Colors for console output
@@ -35,18 +31,17 @@ function log(message, color = 'reset') {
     console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-class TokenDeployer {
+class ERC20TokenDeployer {
     constructor() {
         this.web3 = null;
-        this.accounts = [];
+        this.account = null;
         this.contract = null;
         this.contractAddress = null;
     }
 
     async initialize() {
+        log('🚀 Initializing ERC20 Token Deployer...', 'cyan');
         try {
-            log('🚀 Initializing Token Deployer...', 'cyan');
-            
             // Initialize Web3
             this.web3 = new Web3(CONFIG.RPC_URL);
             
@@ -64,90 +59,88 @@ class TokenDeployer {
             
             log(`✅ Connected to network (Chain ID: ${networkId})`, 'green');
             
-            // Get accounts
-            this.accounts = await this.web3.eth.getAccounts();
-            if (this.accounts.length === 0) {
-                throw new Error('No accounts found. Make sure accounts are unlocked.');
-            }
+            // Create account from private key
+            this.account = this.web3.eth.accounts.privateKeyToAccount(CONFIG.PRIVATE_KEY);
+            this.web3.eth.accounts.wallet.add(this.account);
             
-            log(`✅ Found ${this.accounts.length} accounts`, 'green');
-            log(`📝 Deployer account: ${this.accounts[0]}`, 'blue');
+            log(`✅ Account created from private key`, 'green');
+            log(`📝 Deployer account: ${this.account.address}`, 'blue');
             
             // Check balance
-            const balance = await this.web3.eth.getBalance(this.accounts[0]);
+            const balance = await this.web3.eth.getBalance(this.account.address);
             const balanceEth = this.web3.utils.fromWei(balance, 'ether');
             log(`💰 Account balance: ${balanceEth} ETH`, 'blue');
             
-            // Unlock the account for transactions
-            const password = 'password'; // Default password from setup
-            try {
-                await this.web3.eth.personal.unlockAccount(this.accounts[0], password, 0);
-                log(`🔓 Account unlocked: ${this.accounts[0]}`, 'green');
-            } catch (unlockError) {
-                log(`⚠️ Could not unlock account: ${unlockError.message}`, 'yellow');
-            }
-            
             if (balance === '0') {
-                throw new Error('Deployer account has no ETH. Make sure accounts are funded.');
+                log(`⚠️ Account has no ETH. This account needs to be funded in the genesis block.`, 'yellow');
+                log(`💡 For development, you can fund this account manually or use an existing funded account.`, 'yellow');
+                throw new Error('Account has no ETH. Please fund this account first.');
             }
-            
+
         } catch (error) {
             log(`❌ Initialization failed: ${error.message}`, 'red');
             throw error;
         }
     }
 
-    compileContract() {
+    async compileContract() {
+        log('🔨 Compiling ERC20 smart contract...', 'yellow');
         try {
-            log('🔨 Compiling smart contract...', 'yellow');
+            const contractCode = fs.readFileSync(CONFIG.CONTRACT_FILE, 'utf8');
             
-            // Read contract source
-            const source = fs.readFileSync('./MyToken.sol', 'utf8');
-            
-            // Solc input
+            // Create input for solc with OpenZeppelin dependencies
             const input = {
                 language: 'Solidity',
                 sources: {
-                    'MyToken.sol': {
-                        content: source
+                    'SimpleERC20Token.sol': {
+                        content: contractCode,
+                    },
+                    '@openzeppelin/contracts/token/ERC20/ERC20.sol': {
+                        content: fs.readFileSync('./node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol', 'utf8')
+                    },
+                    '@openzeppelin/contracts/token/ERC20/IERC20.sol': {
+                        content: fs.readFileSync('./node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol', 'utf8')
+                    },
+                    '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol': {
+                        content: fs.readFileSync('./node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol', 'utf8')
+                    },
+                    '@openzeppelin/contracts/utils/Context.sol': {
+                        content: fs.readFileSync('./node_modules/@openzeppelin/contracts/utils/Context.sol', 'utf8')
                     }
                 },
                 settings: {
                     outputSelection: {
                         '*': {
-                            '*': ['*']
-                        }
-                    }
-                }
+                            '*': ['*'],
+                        },
+                    },
+                },
             };
-            
-            // Compile
+
             const output = JSON.parse(solc.compile(JSON.stringify(input)));
             
-            if (output.errors) {
-                const errors = output.errors.filter(error => error.severity === 'error');
-                if (errors.length > 0) {
-                    throw new Error(`Compilation errors: ${JSON.stringify(errors, null, 2)}`);
-                }
+            if (output.errors && output.errors.length > 0) {
+                console.log('Compilation errors:', output.errors);
             }
             
-            const contract = output.contracts['MyToken.sol']['MyToken'];
-            
-            this.contract = {
-                abi: contract.abi,
-                bytecode: contract.evm.bytecode.object
-            };
-            
+            const contractOutput = output.contracts['SimpleERC20Token.sol']['SimpleERC20Token'];
+
+            if (!contractOutput) {
+                throw new Error(`Contract ${CONFIG.CONTRACT_NAME} not found in compilation output.`);
+            }
+
+            this.contractAbi = contractOutput.abi;
+            this.contractBytecode = contractOutput.evm.bytecode.object;
+
+            // Save compiled contract to build directory
+            const buildDir = './build';
+            if (!fs.existsSync(buildDir)) {
+                fs.mkdirSync(buildDir);
+            }
+            fs.writeFileSync(`${buildDir}/SimpleERC20Token.json`, JSON.stringify(contractOutput, null, 2));
             log('✅ Contract compiled successfully', 'green');
-            
-            // Save compiled contract
-            fs.writeFileSync('./build/MyToken.json', JSON.stringify({
-                abi: this.contract.abi,
-                bytecode: this.contract.bytecode
-            }, null, 2));
-            
-            log('💾 Compiled contract saved to build/MyToken.json', 'blue');
-            
+            log('💾 Compiled contract saved to build/SimpleERC20Token.json', 'blue');
+
         } catch (error) {
             log(`❌ Compilation failed: ${error.message}`, 'red');
             throw error;
@@ -155,143 +148,102 @@ class TokenDeployer {
     }
 
     async deployContract() {
+        log('🚀 Deploying ERC20 smart contract...', 'cyan');
         try {
-            log('🚀 Deploying smart contract...', 'cyan');
+            this.contract = new this.web3.eth.Contract(this.contractAbi);
             
-            // Create contract instance
-            const contract = new this.web3.eth.Contract(this.contract.abi);
-            
-            // Estimate gas
-            const deployData = contract.deploy({
-                data: this.contract.bytecode,
-                arguments: [
-                    CONFIG.TOKEN_NAME,
-                    CONFIG.TOKEN_SYMBOL,
-                    CONFIG.TOKEN_DECIMALS,
-                    CONFIG.INITIAL_SUPPLY
-                ]
+            // Prepare deployment data - the constructor takes a recipient address
+            const deployData = this.contract.deploy({
+                data: this.contractBytecode,
+                arguments: [this.account.address] // Deployer receives the initial tokens
             });
             
-            const estimatedGas = await deployData.estimateGas({
-                from: this.accounts[0]
-            });
-            const gasLimit = BigInt(estimatedGas) + BigInt(100000);
+            // Get nonce
+            const nonce = await this.web3.eth.getTransactionCount(this.account.address);
             
-            log(`⛽ Estimated gas: ${estimatedGas}`, 'blue');
-            
-            // Deploy contract
-            const deployedContract = await deployData.send({
-                from: this.accounts[0],
-                gas: gasLimit,
+            // Create transaction object
+            const tx = {
+                from: this.account.address,
+                data: deployData.encodeABI(),
+                gas: CONFIG.GAS_LIMIT,
                 gasPrice: CONFIG.GAS_PRICE,
-                type: '0x2' // EIP-1559 transaction type
-            });
+                nonce: nonce
+            };
             
-            this.contractAddress = deployedContract.options.address;
+            log(`📤 Sending signed transaction...`, 'yellow');
+            log(`🔢 Nonce: ${nonce}`, 'blue');
+            log(`⛽ Gas: ${CONFIG.GAS_LIMIT}`, 'blue');
+            log(`💰 Gas Price: ${CONFIG.GAS_PRICE}`, 'blue');
+            log(`🎯 Initial recipient: ${this.account.address}`, 'blue');
+            
+            // Sign and send transaction
+            const signedTx = await this.web3.eth.accounts.signTransaction(tx, CONFIG.PRIVATE_KEY);
+            const receipt = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+            
+            this.contractAddress = receipt.contractAddress;
             
             log(`✅ Contract deployed successfully!`, 'green');
             log(`📍 Contract address: ${this.contractAddress}`, 'green');
-            log(`🔗 Transaction hash: ${deployedContract.transactionHash}`, 'blue');
-            
-            // Get transaction receipt
-            const receipt = await this.web3.eth.getTransactionReceipt(deployedContract.transactionHash);
-            log(`⛽ Gas used: ${receipt.gasUsed}`, 'blue');
-            
-            // Save deployment info
-            const deploymentInfo = {
-                contractAddress: this.contractAddress,
-                transactionHash: deployedContract.transactionHash,
-                blockNumber: receipt.blockNumber,
-                gasUsed: receipt.gasUsed,
-                deployer: this.accounts[0],
-                network: {
-                    chainId: CONFIG.CHAIN_ID,
-                    rpcUrl: CONFIG.RPC_URL
-                },
-                token: {
-                    name: CONFIG.TOKEN_NAME,
-                    symbol: CONFIG.TOKEN_SYMBOL,
-                    decimals: CONFIG.TOKEN_DECIMALS,
-                    initialSupply: CONFIG.INITIAL_SUPPLY
-                },
-                timestamp: new Date().toISOString()
-            };
-            
-            fs.writeFileSync('./deployment.json', JSON.stringify(deploymentInfo, null, 2));
-            log('💾 Deployment info saved to deployment.json', 'blue');
-            
-            return deployedContract;
-            
+            log(`🔗 Transaction hash: ${receipt.transactionHash}`, 'green');
+
+            // Save contract address and ABI
+            fs.writeFileSync('./build/SimpleERC20Token.address', this.contractAddress);
+            fs.writeFileSync('./build/SimpleERC20Token.abi', JSON.stringify(this.contractAbi, null, 2));
+            log('📝 Contract address and ABI saved to build/ directory', 'green');
+
+            // Test the deployed contract
+            await this.testContract();
+
         } catch (error) {
             log(`❌ Deployment failed: ${error.message}`, 'red');
+            log(`🔍 Error details: ${JSON.stringify(error, null, 2)}`, 'yellow');
             throw error;
         }
     }
 
-    async verifyDeployment() {
+    async testContract() {
+        log('🧪 Testing deployed contract...', 'cyan');
         try {
-            log('🔍 Verifying deployment...', 'yellow');
+            const contractInstance = new this.web3.eth.Contract(this.contractAbi, this.contractAddress);
             
-            const contract = new this.web3.eth.Contract(this.contract.abi, this.contractAddress);
+            // Test token name
+            const name = await contractInstance.methods.name().call();
+            log(`📛 Token name: ${name}`, 'green');
             
-            // Get token info
-            const name = await contract.methods.name().call();
-            const symbol = await contract.methods.symbol().call();
-            const decimals = await contract.methods.decimals().call();
-            const totalSupply = await contract.methods.totalSupply().call();
-            const owner = await contract.methods.owner().call();
+            // Test token symbol
+            const symbol = await contractInstance.methods.symbol().call();
+            log(`🔤 Token symbol: ${symbol}`, 'green');
             
-            log('📊 Token Information:', 'cyan');
-            log(`   Name: ${name}`, 'blue');
-            log(`   Symbol: ${symbol}`, 'blue');
-            log(`   Decimals: ${decimals}`, 'blue');
-            log(`   Total Supply: ${this.web3.utils.fromWei(totalSupply, 'ether')} ${symbol}`, 'blue');
-            log(`   Owner: ${owner}`, 'blue');
+            // Test total supply
+            const totalSupply = await contractInstance.methods.totalSupply().call();
+            const totalSupplyFormatted = this.web3.utils.fromWei(totalSupply, 'ether');
+            log(`📊 Total supply: ${totalSupplyFormatted} ${symbol}`, 'green');
             
-            // Check deployer balance
-            const deployerBalance = await contract.methods.balanceOf(this.accounts[0]).call();
-            const deployerBalanceFormatted = this.web3.utils.fromWei(deployerBalance, 'ether');
+            // Test balance of deployer
+            const balance = await contractInstance.methods.balanceOf(this.account.address).call();
+            const balanceFormatted = this.web3.utils.fromWei(balance, 'ether');
+            log(`💰 Deployer balance: ${balanceFormatted} ${symbol}`, 'green');
             
-            log(`💰 Deployer Balance: ${deployerBalanceFormatted} ${symbol}`, 'green');
-            
-            log('✅ Deployment verification completed', 'green');
-            
+            // Test decimals
+            const decimals = await contractInstance.methods.decimals().call();
+            log(`🔢 Decimals: ${decimals}`, 'green');
+
         } catch (error) {
-            log(`❌ Verification failed: ${error.message}`, 'red');
-            throw error;
+            log(`⚠️ Contract test failed: ${error.message}`, 'yellow');
         }
     }
 
     async run() {
         try {
-            // Create build directory
-            if (!fs.existsSync('./build')) {
-                fs.mkdirSync('./build');
-            }
-            
             await this.initialize();
-            this.compileContract();
+            await this.compileContract();
             await this.deployContract();
-            await this.verifyDeployment();
-            
-            log('\n🎉 Token deployment completed successfully!', 'green');
-            log(`\n📋 Summary:`, 'cyan');
-            log(`   Contract Address: ${this.contractAddress}`, 'blue');
-            log(`   Token Symbol: ${CONFIG.TOKEN_SYMBOL}`, 'blue');
-            log(`   Total Supply: ${CONFIG.INITIAL_SUPPLY} ${CONFIG.TOKEN_SYMBOL}`, 'blue');
-            log(`   Deployer: ${this.accounts[0]}`, 'blue');
-            
+            log('🎉 ERC20 Token deployment completed successfully!', 'green');
         } catch (error) {
             log(`\n💥 Deployment failed: ${error.message}`, 'red');
-            process.exit(1);
         }
     }
 }
 
-// Run deployment
-if (require.main === module) {
-    const deployer = new TokenDeployer();
-    deployer.run();
-}
-
-module.exports = TokenDeployer;
+const deployer = new ERC20TokenDeployer();
+deployer.run();

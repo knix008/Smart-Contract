@@ -23,7 +23,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "fs": "^0.0.1-security",
-    "solc": "^0.7.6",
+    "solc": "^0.8.9",
     "web3": "^4.3.0"
   },
   "devDependencies": {
