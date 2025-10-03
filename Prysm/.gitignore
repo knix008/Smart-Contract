@@ -1,0 +1,64 @@
+# Node data directories
+node1/
+node*/
+
+# JWT secret
+jwt/
+
+# Genesis files (generated)
+genesis.ssz
+genesis-temp.json
+genesis-verify.json
+
+# Prysm downloaded binaries
+dist/
+prysm.sh
+prysmctl
+
+# Validator keys
+validator_keys/
+keystore*/
+*.json.timestamp
+
+# Smart contract artifacts
+smartcontracts/node_modules/
+smartcontracts/cache/
+smartcontracts/artifacts/
+smartcontracts/deployment.json
+smartcontracts/.env
+smartcontracts/coverage/
+smartcontracts/coverage.json
+smartcontracts/typechain-types/
+smartcontracts/.openzeppelin/
+
+# Hardhat
+smartcontracts/.hardhat/
+
+# Logs
+*.log
+geth-debug.log
+beacon.log
+beacon-new.log
+beacon-final.log
+validator.log
+validator-new.log
+validator-final.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Environment
+.env
+.env.local
+.env.*.local
