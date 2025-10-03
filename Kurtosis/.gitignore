@@ -1,0 +1,44 @@
+# Node modules
+node_modules/
+SmartContract/node_modules/
+
+# Hardhat
+SmartContract/cache/
+SmartContract/artifacts/
+SmartContract/typechain-types/
+
+# Build files
+*.log
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+SmartContract/.env
+SmartContract/.contract_address
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hardhat
+coverage/
+coverage.json
+SmartContract/.openzeppelin/
+
+# NPM
+package-lock.json
+SmartContract/package-lock.json
+yarn.lock
+
+# Temporary files
+*.tmp
+*.temp
