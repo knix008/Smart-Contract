@@ -1,0 +1,23 @@
+# Environment variables
+.env
+
+# Wallet credentials - NEVER commit these!
+*.env
+wallet.json
+
+# Compiled contracts (optional - uncomment if you don't want to commit compiled artifacts)
+# compiled/
+
+# Node modules
+node_modules/
+
+# Build artifacts
+artifacts/
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Mac
+.DS_Store
