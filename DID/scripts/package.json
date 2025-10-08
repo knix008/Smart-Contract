@@ -1,0 +1,16 @@
+{
+  "name": "did-integration-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for DID system",
+  "main": "integration-test.js",
+  "scripts": {
+    "test": "node integration-test.js",
+    "test:watch": "nodemon integration-test.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

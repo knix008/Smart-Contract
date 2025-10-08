@@ -1,0 +1,316 @@
+# DID System .gitignore
+
+# ========================================
+# Environment Variables & Secrets
+# ========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Private keys and sensitive data
+private-keys/
+keys/
+secrets/
+wallets/
+
+# ========================================
+# Node.js Dependencies
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package managers
+.npm
+.eslintcache
+.yarn-integrity
+yarn.lock
+package-lock.json
+.pnp
+.pnp.js
+
+# ========================================
+# Hardhat & Ethereum Development
+# ========================================
+# Hardhat files
+cache/
+artifacts/
+typechain/
+typechain-types/
+
+# Coverage reports
+coverage/
+coverage.json
+
+# Gas reporter output
+gas-report.txt
+
+# Deployment files with sensitive data
+deployments/
+.openzeppelin/
+
+# Local blockchain data
+blockchain-data/
+
+# ========================================
+# Build Outputs
+# ========================================
+build/
+dist/
+out/
+
+# ========================================
+# IDE & Editor Files
+# ========================================
+# VSCode
+.vscode/
+!.vscode/settings.json.example
+!.vscode/launch.json.example
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ========================================
+# Operating System Files
+# ========================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# Logs & Runtime Files
+# ========================================
+logs/
+*.log
+*.log.*
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+.grunt
+lib-cov
+.nyc_output
+.coverage
+.coveralls.yml
+
+# ========================================
+# Temporary & Cache Files
+# ========================================
+tmp/
+temp/
+.tmp/
+.cache/
+.parcel-cache/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# ========================================
+# Test & Documentation
+# ========================================
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Documentation
+docs/_build/
+docs/build/
+
+# ========================================
+# Database & Storage
+# ========================================
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# ========================================
+# Security & Keys
+# ========================================
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.cert
+
+# GPG keys
+*.gpg
+*.asc
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# ========================================
+# Blockchain Specific
+# ========================================
+# Ganache/local blockchain
+.ganache-cli/
+
+# Truffle
+build/
+
+# Brownie
+build/
+
+# Web3 related
+.web3/
+
+# ========================================
+# Application Specific
+# ========================================
+# DID system specific
+did-data/
+credential-store/
+verification-logs/
+
+# Local wallet data
+wallet-data/
+keystore/
+
+# Test data
+test-data/
+mock-data/
+
+# ========================================
+# Misc
+# ========================================
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages
+*.dmg
+*.iso
+*.tar
+*.zip
+
+# Office temp files
+~$*
+
+# Dependency directories
+jspm_packages/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# End of file
