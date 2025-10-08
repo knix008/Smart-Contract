@@ -1,0 +1,36 @@
+{
+  "name": "eth-web-wallet",
+  "version": "1.0.0",
+  "description": "Ethereum Web Wallet with Smart Contract Deployment",
+  "scripts": {
+    "compile": "node scripts/compile.js",
+    "compile:simple": "node scripts/compile.js SmartContract/contacts/SimpleToken.sol",
+    "compile:erc20": "node scripts/compile.js SmartContract/contacts/MyERC20Token.sol",
+    "deploy": "node deploy-mytoken.js",
+    "deploy:simple": "node deploy-simpletoken.js",
+    "deploy:default": "node deploy-mytoken.js",
+    "deploy:simple:default": "node deploy-simpletoken.js",
+    "deploy:local": "NETWORK=local node deploy-mytoken.js",
+    "deploy:simple:local": "NETWORK=local node deploy-simpletoken.js",
+    "deploy:sepolia": "NETWORK=sepolia node deploy-mytoken.js",
+    "deploy:simple:sepolia": "NETWORK=sepolia node deploy-simpletoken.js",
+    "interact": "node interact-contract.js",
+    "serve": "python3 -m http.server 8080",
+    "test": "node test/test-all.js",
+    "test:account": "node test/test-account.js",
+    "test:contract": "node test/test-contract.js",
+    "test:deployment": "node test/test-deployment.js",
+    "test:network": "node test/test-network.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@openzeppelin/contracts": "^5.4.0",
+    "hardhat": "^3.0.6"
+  },
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ethers": "^6.15.0",
+    "solc": "^0.8.30"
+  }
+}
