@@ -3,6 +3,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .App-header {
@@ -21,10 +22,58 @@
   margin: 0;
 }
 
+/* Navigation Styles */
+.app-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  color: #666;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-tab:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.nav-tab.active {
+  background-color: #4CAF50;
+  color: white;
+  transform: translateY(2px);
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #4CAF50;
+}
+
 .App-main {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  max-width: 100%;
 }
 
 .wallet-controls {
@@ -37,7 +86,10 @@
 .create-wallet-btn,
 .check-balance-btn,
 .save-wallet-btn,
-.show-saved-btn {
+.show-saved-btn,
+.export-env-btn,
+.import-env-btn,
+.balance-check-btn {
   padding: 15px 30px;
   font-size: 1.1em;
   border: none;
@@ -93,6 +145,26 @@
   transform: translateY(-2px);
 }
 
+.export-env-btn {
+  background-color: #795548;
+  color: white;
+}
+
+.export-env-btn:hover {
+  background-color: #5D4037;
+  transform: translateY(-2px);
+}
+
+.import-env-btn {
+  background-color: #607D8B;
+  color: white;
+}
+
+.import-env-btn:hover {
+  background-color: #455A64;
+  transform: translateY(-2px);
+}
+
 .error-message {
   padding: 15px;
   background-color: #ffebee;
@@ -111,6 +183,10 @@
   border-radius: 12px;
   border: 1px solid #e9ecef;
   text-align: left;
+  max-width: 100%;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
 }
 
 .wallet-info h2,
@@ -121,29 +197,43 @@
   color: #2c3e50;
   border-bottom: 2px solid #4CAF50;
   padding-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .info-item {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .info-item label {
   display: block;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: #34495e;
   font-size: 1.1em;
+  border-left: 4px solid #4CAF50;
+  padding-left: 12px;
+  background-color: #f8f9fa;
 }
 
 .copyable-field {
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .copyable-field input,
 .copyable-field textarea {
-  flex: 1;
+  width: 100%;
   padding: 12px;
   border: 2px solid #ddd;
   border-radius: 6px;
@@ -151,6 +241,8 @@
   font-size: 0.9em;
   background-color: white;
   transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  word-break: break-all;
 }
 
 .copyable-field input:focus,
@@ -162,10 +254,12 @@
 .copyable-field textarea {
   resize: vertical;
   min-height: 80px;
+  font-family: 'Courier New', monospace;
 }
 
 .copyable-field button {
-  padding: 12px 20px;
+  align-self: flex-start;
+  padding: 10px 20px;
   background-color: #6c757d;
   color: white;
   border: none;
@@ -174,6 +268,7 @@
   font-size: 0.9em;
   transition: background-color 0.3s ease;
   white-space: nowrap;
+  min-width: 100px;
 }
 
 .copyable-field button:hover {
@@ -184,8 +279,87 @@
   display: block;
   color: #e67e22;
   font-weight: 500;
-  margin-top: 5px;
+  margin-top: 8px;
   font-size: 0.9em;
+  padding: 8px 12px;
+  background-color: #fef9e7;
+  border: 1px solid #f39c12;
+  border-radius: 4px;
+  border-left: 4px solid #e67e22;
+}
+
+/* Wallet Balance Section */
+.wallet-balance-section {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #e9ecef;
+  text-align: center;
+}
+
+.balance-check-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  margin-bottom: 15px;
+  min-width: 200px;
+}
+
+.balance-check-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.balance-check-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.current-balance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.current-balance .balance-info-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.balance-label {
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.balance-value {
+  font-family: 'Courier New', monospace;
+  font-size: 1.3em;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.network-info {
+  font-size: 0.85em;
+  opacity: 0.9;
+  font-style: italic;
+  margin-top: 2px;
 }
 
 .balance-info {
@@ -418,7 +592,9 @@
   .create-wallet-btn,
   .check-balance-btn,
   .save-wallet-btn,
-  .show-saved-btn {
+  .show-saved-btn,
+  .export-env-btn,
+  .import-env-btn {
     width: 100%;
     max-width: 300px;
   }
@@ -444,6 +620,46 @@
   .wallet-actions {
     width: 100%;
     justify-content: space-between;
+  }
+  
+  .balance-check-btn {
+    padding: 12px 20px;
+    font-size: 1em;
+    min-width: 180px;
+  }
+  
+  .current-balance {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .balance-value {
+    font-size: 1.1em;
+  }
+  
+  .wallet-info,
+  .saved-wallets {
+    padding: 20px;
+  }
+  
+  .info-item {
+    margin-bottom: 20px;
+  }
+  
+  .copyable-field {
+    gap: 8px;
+  }
+  
+  .copyable-field input,
+  .copyable-field textarea {
+    font-size: 0.85em;
+    padding: 10px;
+  }
+  
+  .copyable-field button {
+    padding: 8px 16px;
+    font-size: 0.85em;
   }
   
   .load-btn,

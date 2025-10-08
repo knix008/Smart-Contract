@@ -1,0 +1,34 @@
+{
+  "name": "ethereum-wallet-smartcontracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for the Ethereum Wallet application",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
+    "node": "npx hardhat node",
+    "clean": "npx hardhat clean",
+    "balance:sepolia": "npx hardhat run scripts/checkBalance.js --network sepolia",
+    "balance:mainnet": "npx hardhat run scripts/checkBalance.js --network mainnet"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "smart-contracts",
+    "wallet",
+    "blockchain"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}

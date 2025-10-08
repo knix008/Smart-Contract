@@ -1,23 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import { Wallet, WalletBalance, SavedWallets } from './types';
+import { EnvFileManager } from './envManager';
+import SmartContractManager from './SmartContractManager';
 import './App.css';
-
-interface Wallet {
-  address: string;
-  privateKey: string;
-  mnemonic: string;
-  createdAt: string;
-  name?: string;
-}
-
-interface WalletBalance {
-  address: string;
-  balance: string;
-}
-
-interface SavedWallets {
-  wallets: Wallet[];
-}
 
 function App() {
   const [wallet, setWallet] = useState<Wallet | null>(null);
@@ -26,6 +12,7 @@ function App() {
   const [error, setError] = useState<string>('');
   const [savedWallets, setSavedWallets] = useState<Wallet[]>([]);
   const [showSavedWallets, setShowSavedWallets] = useState(false);
+  const [activeTab, setActiveTab] = useState<'wallet' | 'contracts'>('wallet');
 
   // Load saved wallets on component mount
   useEffect(() => {
@@ -90,6 +77,55 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
+  const exportToEnvFile = () => {
+    try {
+      EnvFileManager.downloadEnvFile(savedWallets);
+      alert('.env file downloaded successfully! Keep this file secure and never commit it to version control.');
+    } catch (err) {
+      setError('Failed to export .env file: ' + (err as Error).message);
+    }
+  };
+
+  const importFromEnvFile = async () => {
+    try {
+      setError('');
+      const envWallets = await EnvFileManager.loadEnvFile();
+      
+      if (envWallets.length === 0) {
+        setError('No valid wallet data found in the .env file');
+        return;
+      }
+
+      // Convert env wallet data to our wallet format
+      const newWallets: Wallet[] = envWallets.map((envWallet, index) => ({
+        address: envWallet.address,
+        privateKey: envWallet.privateKey,
+        mnemonic: envWallet.mnemonic,
+        createdAt: new Date().toISOString(),
+        name: envWallet.name || `Imported Wallet ${index + 1}`
+      }));
+
+      // Merge with existing wallets (avoid duplicates)
+      const existingAddresses = new Set(savedWallets.map(w => w.address));
+      const uniqueNewWallets = newWallets.filter(w => !existingAddresses.has(w.address));
+
+      if (uniqueNewWallets.length === 0) {
+        alert('All wallets from the .env file already exist in your saved wallets.');
+        return;
+      }
+
+      const updatedWallets = [...savedWallets, ...uniqueNewWallets];
+      const walletData: SavedWallets = { wallets: updatedWallets };
+      
+      localStorage.setItem('ethereum-wallets', JSON.stringify(walletData));
+      setSavedWallets(updatedWallets);
+      
+      alert(`Successfully imported ${uniqueNewWallets.length} wallet(s) from .env file!`);
+    } catch (err) {
+      setError('Failed to import .env file: ' + (err as Error).message);
+    }
+  };
+
   const deleteWallet = (address: string) => {
     if (confirm('Are you sure you want to delete this wallet? This action cannot be undone.')) {
       try {
@@ -148,8 +184,9 @@ function App() {
     setError('');
 
     try {
-      // Using Ethereum mainnet provider (you can change to testnet)
-      const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com');
+      // Using Sepolia testnet provider from environment variables
+      const rpcUrl = import.meta.env.VITE_ETHEREUM_RPC_URL || 'https://sepolia.infura.io/v3/135887a7cd1544ee9c68a3d6fc24d10e';
+      const provider = new ethers.JsonRpcProvider(rpcUrl);
       const balanceWei = await provider.getBalance(wallet.address);
       const balanceEth = ethers.formatEther(balanceWei);
       
@@ -172,11 +209,27 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🔗 Ethereum Wallet Generator</h1>
-        <p>Create new Ethereum wallets and check their balances</p>
+        <h1>🔗 Ethereum Wallet & Smart Contracts</h1>
+        <p>Create wallets, deploy contracts, and interact with the blockchain</p>
+        
+        <nav className="app-navigation">
+          <button 
+            className={`nav-tab ${activeTab === 'wallet' ? 'active' : ''}`}
+            onClick={() => setActiveTab('wallet')}
+          >
+            💼 Wallet Manager
+          </button>
+          <button 
+            className={`nav-tab ${activeTab === 'contracts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('contracts')}
+          >
+            📋 Smart Contracts
+          </button>
+        </nav>
       </header>
 
-      <main className="App-main">
+      {activeTab === 'wallet' && (
+        <main className="App-main">
         <div className="wallet-controls">
           <button 
             onClick={createNewWallet}
@@ -205,13 +258,29 @@ function App() {
           )}
           
           {savedWallets.length > 0 && (
-            <button 
-              onClick={() => setShowSavedWallets(!showSavedWallets)}
-              className="show-saved-btn"
-            >
-              📂 {showSavedWallets ? 'Hide' : 'Show'} Saved Wallets ({savedWallets.length})
-            </button>
+            <>
+              <button 
+                onClick={() => setShowSavedWallets(!showSavedWallets)}
+                className="show-saved-btn"
+              >
+                📂 {showSavedWallets ? 'Hide' : 'Show'} Saved Wallets ({savedWallets.length})
+              </button>
+              
+              <button 
+                onClick={exportToEnvFile}
+                className="export-env-btn"
+              >
+                📄 Export to .env
+              </button>
+            </>
           )}
+          
+          <button 
+            onClick={importFromEnvFile}
+            className="import-env-btn"
+          >
+            📥 Import from .env
+          </button>
         </div>
 
         {error && (
@@ -298,15 +367,24 @@ function App() {
               </div>
               <small className="warning">⚠️ Store this safely - it's your wallet backup!</small>
             </div>
-          </div>
-        )}
 
-        {balance && (
-          <div className="balance-info">
-            <h2>💰 Wallet Balance</h2>
-            <div className="balance-display">
-              <span className="balance-amount">{balance.balance} ETH</span>
-              <span className="balance-address">for {balance.address}</span>
+            <div className="wallet-balance-section">
+              <button 
+                onClick={checkBalance}
+                disabled={isLoading}
+                className="balance-check-btn"
+              >
+                {isLoading ? '⏳ Checking Balance...' : '💰 Check Wallet Balance'}
+              </button>
+              {balance && (
+                <div className="current-balance">
+                  <div className="balance-info-row">
+                    <span className="balance-label">Sepolia Testnet Balance:</span>
+                    <span className="balance-value">{balance.balance} ETH</span>
+                  </div>
+                  <small className="network-info">🌐 Network: Sepolia Testnet</small>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -315,13 +393,29 @@ function App() {
           <h3>ℹ️ Important Notes</h3>
           <ul>
             <li>This creates a completely new Ethereum wallet with a random private key</li>
-            <li>The wallet will have 0 ETH balance initially</li>
-            <li>To test with funds, use Ethereum testnets like Sepolia or Goerli</li>
+            <li>The wallet will have 0 ETH balance initially on Sepolia testnet</li>
+            <li>Balance checking is configured for Sepolia testnet - get free test ETH from faucets</li>
             <li>Never share your private key or mnemonic phrase with anyone</li>
             <li>This is for educational purposes - use secure wallet software for real funds</li>
           </ul>
         </div>
-      </main>
+
+        <div className="info-section">
+          <h3>💾 File Storage Options</h3>
+          <ul>
+            <li><strong>JSON Backup:</strong> Automatic backup files when saving wallets</li>
+            <li><strong>.env Export:</strong> Export wallets as environment variables for development</li>
+            <li><strong>.env Import:</strong> Import wallets from existing .env files</li>
+            <li><strong>Local Storage:</strong> Browser-based storage for quick access</li>
+          </ul>
+          <p><strong>⚠️ Security:</strong> .env files contain sensitive data. Never commit them to version control!</p>
+        </div>
+        </main>
+      )}
+
+      {activeTab === 'contracts' && (
+        <SmartContractManager wallet={wallet} />
+      )}
     </div>
   );
 }

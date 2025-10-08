@@ -1,0 +1,57 @@
+# Dependency directories
+node_modules/
+.npm
+
+# Hardhat files
+cache/
+artifacts/
+
+# TypeChain
+typechain/
+typechain-types/
+
+# Solidity coverage
+coverage/
+coverage.json
+
+# Hardhat Network
+.hardhat-network-stack.json
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Deployment artifacts
+deployments/
+deployment-*.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Gas reports
+gas-report.txt
+
+# Flattened contracts
+flattened/
