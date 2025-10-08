@@ -1,232 +1,460 @@
-# Ethereum Wallet & Smart Contract Manager# Ethereum Wallet Gene- 💾 **Save Wallets**: Save wallet information locally with automatic backup downloads
+# Ethereum Wallet & Smart Contract Manager# Ethereum Wallet & Smart Contract Manager# Ethereum Wallet Gene- 💾 **Save Wallets**: Save wallet information locally with automatic backup downloads
 
-- 📄 **Export to .env**: Export wallets as environment variables for development use
 
-A comprehensive React application for Ethereum wallet management and smart contract deployment/testing. Built with TypeScript, Vite, and ethers.js.- 📥 **Import from .env**: Import existing wallets from .env files
 
-- 📂 **Wallet Management**: Load, view, and delete saved walletstor
+A comprehensive React application for Ethereum wallet management and smart contract deployment/testing. Built with TypeScript, Vite, and ethers.js.- 📄 **Export to .env**: Export wallets as environment variables for development use
 
-## 🌟 Features
 
-A React application for creating3. **Save Wallet**:
 
-### 💼 Wallet Management   - After creating a wallet, click "💾 Save Wallet" to store it locally
+## 🌟 FeaturesA comprehensive React application for Ethereum wallet management and smart contract deployment/testing. Built with TypeScript, Vite, and ethers.js.- 📥 **Import from .env**: Import existing wallets from .env files
 
-- **Create New Wallets**: Generate secure Ethereum wallets with random private keys and mnemonic phrases   - A backup JSON file will automatically download to your computer
 
-- **Balance Checking**: Check ETH balances on Ethereum mainnet   - Saved wallets are stored in browser localStorage
+
+### 💼 Wallet Management- 📂 **Wallet Management**: Load, view, and delete saved walletstor
+
+- **Create New Wallets**: Generate secure Ethereum wallets with random private keys and mnemonic phrases
+
+- **Balance Checking**: Check ETH balances on Ethereum mainnet## 🌟 Features
 
 - **Local Storage**: Save and manage multiple wallets in browser storage
 
-- **File Export/Import**: Export wallets to .env files and import from existing .env files4. **Manage Saved Wallets**:
+- **JSON Backup**: Automatic JSON backup files for wallet dataA React application for creating3. **Save Wallet**:
 
-- **JSON Backup**: Automatic JSON backup files for wallet data   - Click "📂 Show Saved Wallets" to view all saved wallets
+- **Security**: Never stores sensitive data in plain text unnecessarily
 
-- **Security**: Never stores sensitive data in plain text unnecessarily   - Use "📥 Load" to switch to a saved wallet
-
-   - Use "🗑️ Delete" to remove a wallet from storage
+### 💼 Wallet Management   - After creating a wallet, click "💾 Save Wallet" to store it locally
 
 ### 📋 Smart Contract Management
 
-- **Web Interface**: Deploy and test smart contracts directly from the browser5. **Export to .env**:
+- **Web Interface**: Deploy and test smart contracts directly from the browser- **Create New Wallets**: Generate secure Ethereum wallets with random private keys and mnemonic phrases   - A backup JSON file will automatically download to your computer
 
-- **MetaMask Integration**: Connect with MetaMask for secure transaction signing   - Click "📄 Export to .env" to download wallets as environment variables
+- **Contract Testing**: Interactive testing interface for deployed contracts
 
-- **Multiple Contracts**: Support for SimpleWallet, WalletFactory, and WalletToken contracts   - Use these .env files in your development projects
+- **Deployment History**: Track all deployed contracts with Etherscan links- **Balance Checking**: Check ETH balances on Ethereum mainnet   - Saved wallets are stored in browser localStorage
 
-- **Contract Testing**: Interactive testing interface for deployed contracts   - Perfect for hardcoding wallet addresses in smart contract projects
+- **Function Execution**: Call contract functions with real-time results
 
-- **Deployment History**: Track all deployed contracts with Etherscan links
+- **Local Storage**: Save and manage multiple wallets in browser storage
 
-- **Function Execution**: Call contract functions with real-time results6. **Import from .env**:
+### 🔧 Development Environment
 
-   - Click "📥 Import from .env" to load wallets from existing .env files
-
-### 🔧 Development Environment   - Select any .env file containing wallet variables
-
-- **Hardhat Integration**: Complete smart contract development setup   - Automatically detects and imports valid wallet data
+- **Hardhat Integration**: Complete smart contract development setup- **File Export/Import**: Export wallets to .env files and import from existing .env files4. **Manage Saved Wallets**:
 
 - **Solidity Support**: Contracts written in Solidity 0.8.19/0.8.20
 
-- **OpenZeppelin**: Secure contract implementations using OpenZeppelin libraries7. **Check Balance**:
+- **Testing Framework**: Automated contract testing with detailed results- **JSON Backup**: Automatic JSON backup files for wallet data   - Click "📂 Show Saved Wallets" to view all saved wallets
 
-- **Test Suite**: Comprehensive test coverage (21/21 tests passing)   - After creating or loading a wallet, click "💰 Check Balance"
+- **Sepolia Testnet**: Deploy and test on Ethereum Sepolia testnet
 
-- **Sepolia Testnet**: Configured for Sepolia testnet deployment via Infura   - The app will connect to Ethereum mainnet and display the current ETH balance
+- **Security**: Never stores sensitive data in plain text unnecessarily   - Use "📥 Load" to switch to a saved wallet
 
+## 📦 Installation
 
+   - Use "🗑️ Delete" to remove a wallet from storage
 
-## 🚀 Quick Start8. **Copy Wallet Information**:Ethereum wallets and checking their balances.
+1. **Clone the repository**:
 
+```bash### 📋 Smart Contract Management
 
+git clone <repository-url>
 
-### Prerequisites## Features
-
-- Node.js (v16 or higher)
-
-- npm or yarn- 🔑 **Generate New Wallets**: Create completely new Ethereum wallets with random private keys
-
-- MetaMask browser extension (for smart contract features)- 💰 **Check Balances**: View ETH balance for any generated wallet
-
-- � **Save Wallets**: Save wallet information locally with automatic backup downloads
-
-### Installation- 📂 **Wallet Management**: Load, view, and delete saved wallets
-
-- �📋 **Copy Functionality**: Easy copy-to-clipboard for addresses, private keys, and mnemonic phrases
-
-1. **Clone the repository**- 🔐 **Security Warnings**: Built-in reminders about wallet security best practices
-
-   ```bash- 📱 **Responsive Design**: Works on desktop and mobile devices
-
-   git clone <repository-url>- 🌙 **Dark Mode Support**: Automatic dark/light mode based on system preferences
-
-   cd WebWallet- 📄 **Backup Files**: Automatic JSON backup file downloads for wallet data
-
-   ```
-
-## What This App Does
-
-2. **Install dependencies**
-
-   ```bash1. **Wallet Creation**: Generates a new Ethereum wallet with:
-
-   npm install   - Public address (for receiving funds)
-
-   ```   - Private key (for accessing the wallet)
-
-   - 12-word mnemonic phrase (for wallet recovery)
-
-3. **Set up environment variables**
-
-   ```bash2. **Balance Checking**: Connects to Ethereum mainnet to check the ETH balance of generated wallets
-
-   cp .env.example .env
-
-   # Edit .env with your Infura project ID and deployment private key3. **User Interface**: Provides a clean, intuitive web interface for all wallet operations
-
-   ```
-
-## Getting Started
-
-4. **Compile smart contracts**
-
-   ```bash### Prerequisites
-
-   cd smartcontracts
-
-   npm install- Node.js (version 16 or higher)
-
-   npx hardhat compile- npm or yarn package manager
-
-   ```
-
-### Installation
-
-5. **Run tests (optional)**
-
-   ```bash1. Install dependencies:
-
-   npx hardhat test```bash
-
-   ```npm install
+cd WebWallet- **Web Interface**: Deploy and test smart contracts directly from the browser5. **Export to .env**:
 
 ```
 
-6. **Start the development server**
+- **MetaMask Integration**: Connect with MetaMask for secure transaction signing   - Click "📄 Export to .env" to download wallets as environment variables
 
-   ```bash2. Start the development server:
+2. **Install dependencies**:
+
+```bash- **Multiple Contracts**: Support for SimpleWallet, WalletFactory, and WalletToken contracts   - Use these .env files in your development projects
+
+npm install
+
+```- **Contract Testing**: Interactive testing interface for deployed contracts   - Perfect for hardcoding wallet addresses in smart contract projects
+
+
+
+3. **Install smart contract dependencies**:- **Deployment History**: Track all deployed contracts with Etherscan links
+
+```bash
+
+cd smartcontracts- **Function Execution**: Call contract functions with real-time results6. **Import from .env**:
+
+npm install
+
+cd ..   - Click "📥 Import from .env" to load wallets from existing .env files
+
+```
+
+### 🔧 Development Environment   - Select any .env file containing wallet variables
+
+## 🚀 Usage
+
+- **Hardhat Integration**: Complete smart contract development setup   - Automatically detects and imports valid wallet data
+
+### Running the Application
+
+- **Solidity Support**: Contracts written in Solidity 0.8.19/0.8.20
+
+1. **Start the development server**:
+
+```bash- **OpenZeppelin**: Secure contract implementations using OpenZeppelin libraries7. **Check Balance**:
+
+npm run dev
+
+```- **Test Suite**: Comprehensive test coverage (21/21 tests passing)   - After creating or loading a wallet, click "💰 Check Balance"
+
+
+
+2. **Open your browser**:- **Sepolia Testnet**: Configured for Sepolia testnet deployment via Infura   - The app will connect to Ethereum mainnet and display the current ETH balance
+
+Navigate to `http://localhost:5173`
+
+
+
+### Using the Wallet Manager
+
+## 🚀 Quick Start8. **Copy Wallet Information**:Ethereum wallets and checking their balances.
+
+1. **Create a New Wallet**:
+
+   - Click "🎲 Generate New Wallet" on the Wallet Manager tab
+
+   - A new wallet with address, private key, and mnemonic will be generated
+
+   - The wallet balance will be automatically checked### Prerequisites## Features
+
+
+
+2. **Save Wallet**:- Node.js (v16 or higher)
+
+   - After creating a wallet, click "💾 Save Wallet" to store it locally
+
+   - A backup JSON file will automatically download to your computer- npm or yarn- 🔑 **Generate New Wallets**: Create completely new Ethereum wallets with random private keys
+
+   - Saved wallets are stored in browser localStorage
+
+- MetaMask browser extension (for smart contract features)- 💰 **Check Balances**: View ETH balance for any generated wallet
+
+3. **Manage Saved Wallets**:
+
+   - Click "📂 Show Saved Wallets" to view all saved wallets- � **Save Wallets**: Save wallet information locally with automatic backup downloads
+
+   - Use "📥 Load" to switch to a saved wallet
+
+   - Use "🗑️ Delete" to remove a wallet from storage### Installation- 📂 **Wallet Management**: Load, view, and delete saved wallets
+
+
+
+### Using the Smart Contract Manager- �📋 **Copy Functionality**: Easy copy-to-clipboard for addresses, private keys, and mnemonic phrases
+
+
+
+1. **Connect Wallet**:1. **Clone the repository**- 🔐 **Security Warnings**: Built-in reminders about wallet security best practices
+
+   - First create or load a wallet in the Wallet Manager tab
+
+   - Switch to the Smart Contract Manager tab   ```bash- 📱 **Responsive Design**: Works on desktop and mobile devices
+
+   - Your wallet will be automatically connected
+
+   git clone <repository-url>- 🌙 **Dark Mode Support**: Automatic dark/light mode based on system preferences
+
+2. **Compile Contracts**:
+
+   - Click "🔨 Compile Contracts" to compile the smart contracts   cd WebWallet- 📄 **Backup Files**: Automatic JSON backup file downloads for wallet data
+
+   - This uses Hardhat to compile Solidity contracts
+
+   ```
+
+3. **Run Tests**:
+
+   - Click "🧪 Run Tests" to execute the test suite## What This App Does
+
+   - View detailed test results with pass/fail status for each test case
+
+   - Tests include comprehensive contract functionality verification2. **Install dependencies**
+
+
+
+4. **Deploy Contracts**:   ```bash1. **Wallet Creation**: Generates a new Ethereum wallet with:
+
+   - Click "🚀 Deploy to Sepolia" to deploy contracts to the testnet
+
+   - Monitor deployment progress and view transaction details   npm install   - Public address (for receiving funds)
+
+   - Deployed contracts will appear in the deployment history
+
+   ```   - Private key (for accessing the wallet)
+
+## 🏗️ Architecture
+
+   - 12-word mnemonic phrase (for wallet recovery)
+
+### Frontend (React + TypeScript)
+
+- **Vite**: Fast build tool and development server3. **Set up environment variables**
+
+- **ethers.js**: Ethereum library for wallet and contract interactions
+
+- **React**: Component-based UI framework   ```bash2. **Balance Checking**: Connects to Ethereum mainnet to check the ETH balance of generated wallets
+
+- **TypeScript**: Type-safe JavaScript
+
+   cp .env.example .env
+
+### Smart Contracts (Solidity)
+
+- **Hardhat**: Development environment for Ethereum   # Edit .env with your Infura project ID and deployment private key3. **User Interface**: Provides a clean, intuitive web interface for all wallet operations
+
+- **OpenZeppelin**: Secure smart contract library
+
+- **Solidity**: Smart contract programming language   ```
+
+
+
+### Key Components## Getting Started
+
+- `App.tsx`: Main application component with tab navigation
+
+- `SmartContractManager.tsx`: Smart contract deployment and testing4. **Compile smart contracts**
+
+- `envManager.ts`: Wallet management utilities
+
+- `contracts/`: Solidity smart contracts   ```bash### Prerequisites
+
+- `test/`: Contract test suites
+
+   cd smartcontracts
+
+## 🔒 Security Features
+
+   npm install- Node.js (version 16 or higher)
+
+- **Client-side Only**: All wallet operations happen in your browser
+
+- **No Server**: No data is sent to external servers   npx hardhat compile- npm or yarn package manager
+
+- **Local Storage**: Wallet data stays on your device
+
+- **Backup Files**: Automatic JSON backups for safety   ```
+
+- **Private Key Protection**: Private keys are never exposed unnecessarily
+
+### Installation
+
+## 🌐 Network Configuration
+
+5. **Run tests (optional)**
+
+The application is pre-configured with:
+
+- **Sepolia Testnet**: For testing and development   ```bash1. Install dependencies:
+
+- **Infura RPC**: Reliable Ethereum node access
+
+- **Automatic Network Detection**: Smart network switching   npx hardhat test```bash
+
+
+
+## 📝 Smart Contract Features   ```npm install
+
+
+
+### MyERC20Token Contract```
+
+- **ERC20 Standard**: Fully compliant ERC20 token
+
+- **Pausable**: Emergency pause functionality6. **Start the development server**
+
+- **Burnable**: Token burning capability
+
+- **Flash Mint**: Advanced minting features   ```bash2. Start the development server:
+
+- **Permit**: Gas-efficient approvals
 
    cd ..```bash
 
-   npm run devnpm run dev
+### Testing Suite
 
-   ``````
+- Comprehensive test coverage   npm run devnpm run dev
 
+- Ownership verification
 
+- Token functionality testing   ``````
+
+- Pause/unpause mechanics
+
+- Transfer restrictions
+
+- Burn functionality
 
 7. **Open the application**3. Open your browser and navigate to `http://localhost:5173`
 
+## 🛠️ Development
+
    - Navigate to `http://localhost:5173`
+
+### Smart Contract Development
 
    - Use the **Wallet Manager** tab for wallet operations### Available Scripts
 
-   - Use the **Smart Contracts** tab for contract deployment and testing
+1. **Navigate to contracts directory**:
 
-- `npm run dev` - Start development server
+```bash   - Use the **Smart Contracts** tab for contract deployment and testing
 
-## 📖 Usage Guide- `npm run build` - Build for production
+cd smartcontracts
 
-- `npm run preview` - Preview production build
+```- `npm run dev` - Start development server
+
+
+
+2. **Compile contracts**:## 📖 Usage Guide- `npm run build` - Build for production
+
+```bash
+
+npx hardhat compile- `npm run preview` - Preview production build
+
+```
 
 ### Wallet Manager Tab- `npm run lint` - Run ESLint
 
+3. **Run tests**:
+
+```bash
+
+npx hardhat test
+
+```#### Creating a New Wallet## How to Use
 
 
-#### Creating a New Wallet## How to Use
 
-1. Click "🔑 Create New Wallet"
+4. **Deploy to Sepolia** (requires setup):1. Click "🔑 Create New Wallet"
 
-2. A new wallet will be generated with:1. **Create a New Wallet**:
+```bash
+
+npx hardhat run scripts/deploy.js --network sepolia2. A new wallet will be generated with:1. **Create a New Wallet**:
+
+```
 
    - Ethereum address   - Click the "🔑 Create New Wallet" button
 
+### Frontend Development
+
    - Private key (keep secure!)   - A new wallet will be generated with a unique address, private key, and mnemonic phrase
 
-   - 12-word mnemonic phrase
+1. **Start development server**:
 
-   - Creation timestamp2. **Check Balance**:
+```bash   - 12-word mnemonic phrase
 
-   - After creating a wallet, click "💰 Check Balance"
+npm run dev
 
-#### Checking Balance   - The app will connect to Ethereum mainnet and display the current ETH balance
+```   - Creation timestamp2. **Check Balance**:
+
+
+
+2. **Build for production**:   - After creating a wallet, click "💰 Check Balance"
+
+```bash
+
+npm run build#### Checking Balance   - The app will connect to Ethereum mainnet and display the current ETH balance
+
+```
 
 1. Create or load a wallet
 
-2. Click "💰 Check Balance"3. **Copy Wallet Information**:
+3. **Preview production build**:
 
-3. Balance will be displayed in ETH   - Use the "📋 Copy" buttons to copy address, private key, or mnemonic phrase
+```bash2. Click "💰 Check Balance"3. **Copy Wallet Information**:
 
-   - Store this information securely!
+npm run preview
 
-#### Saving Wallets
+```3. Balance will be displayed in ETH   - Use the "📋 Copy" buttons to copy address, private key, or mnemonic phrase
 
-1. After creating a wallet, click "💾 Save Wallet"## Important Security Notes
 
-2. Wallet will be stored in browser's local storage
+
+## 📚 Documentation   - Store this information securely!
+
+
+
+### Wallet Management#### Saving Wallets
+
+The wallet manager provides a secure way to:
+
+- Generate cryptographically secure wallets1. After creating a wallet, click "💾 Save Wallet"## Important Security Notes
+
+- Store wallets locally with encryption
+
+- Export wallet data for development use2. Wallet will be stored in browser's local storage
+
+- Import existing wallet data
 
 3. Automatic JSON backup file will be created⚠️ **This application is for educational purposes only**
 
+### Smart Contract Integration
 
+Smart contracts are integrated through:
 
-#### Managing Saved Wallets- **Never use generated wallets for real funds without proper security measures**
+- Hardhat compilation system
 
-1. Click "📂 Show Saved Wallets" to view all saved wallets- **Private keys and mnemonic phrases give full access to wallets**
+- Automated testing framework#### Managing Saved Wallets- **Never use generated wallets for real funds without proper security measures**
 
-2. Load any wallet by clicking its "Load" button- **Always use hardware wallets or established wallet software for significant amounts**
+- Deployment to testnets
 
-3. Delete wallets using the "Delete" button (irreversible)- **This app generates wallets client-side, but for maximum security, use offline generation**
-
-
-
-#### File Operations## Technical Details
-
-- **Export to .env**: Click "📄 Export to .env" to create an environment file
-
-- **Import from .env**: Click "📥 Import from .env" to load wallets from an existing .env file### Technologies Used
+- Interactive contract interfaces1. Click "📂 Show Saved Wallets" to view all saved wallets- **Private keys and mnemonic phrases give full access to wallets**
 
 
 
-### Smart Contracts Tab- **React 18** with TypeScript
+## 🤝 Contributing2. Load any wallet by clicking its "Load" button- **Always use hardware wallets or established wallet software for significant amounts**
 
-- **Vite** for fast development and building
+
+
+1. Fork the repository3. Delete wallets using the "Delete" button (irreversible)- **This app generates wallets client-side, but for maximum security, use offline generation**
+
+2. Create a feature branch
+
+3. Make your changes
+
+4. Add tests if applicable
+
+5. Submit a pull request#### File Operations## Technical Details
+
+
+
+## 📄 License- **Export to .env**: Click "📄 Export to .env" to create an environment file
+
+
+
+This project is open source and available under the MIT License.- **Import from .env**: Click "📥 Import from .env" to load wallets from an existing .env file### Technologies Used
+
+
+
+## 🆘 Support
+
+
+
+For issues and questions:### Smart Contracts Tab- **React 18** with TypeScript
+
+1. Check the documentation
+
+2. Review existing issues- **Vite** for fast development and building
+
+3. Create a new issue with detailed information
 
 #### Connecting MetaMask- **ethers.js** for Ethereum blockchain interactions
 
+## 🔗 Useful Links
+
 1. Click "Connect MetaMask"- **CSS3** with responsive design and dark mode support
 
-2. Approve the connection in MetaMask
+- [Ethers.js Documentation](https://docs.ethers.org/)
 
-3. Your wallet address and balance will be displayed### Blockchain Integration
+- [Hardhat Documentation](https://hardhat.org/docs)2. Approve the connection in MetaMask
+
+- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/)
+
+- [Solidity Documentation](https://docs.soliditylang.org/)3. Your wallet address and balance will be displayed### Blockchain Integration
 
 
 

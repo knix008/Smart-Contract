@@ -1,9 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
 
-// Load environment variables
-const dotenv = require('dotenv');
-dotenv.config({ path: '../.env' });
-
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
@@ -46,18 +42,18 @@ module.exports = {
       chainId: 1337
     },
     sepolia: {
-      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_PROJECT_ID",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      url: "https://sepolia.infura.io/v3/135887a7cd1544ee9c68a3d6fc24d10e",
+      accounts: [], // Add your private key here if needed for deployment
       chainId: 11155111
     },
     mainnet: {
-      url: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      url: "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+      accounts: [], // Add your private key here if needed for deployment
       chainId: 1
     }
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: "YOUR_ETHERSCAN_API_KEY" // Replace with your API key if needed
   },
   paths: {
     sources: "./contracts",

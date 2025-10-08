@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Wallet, WalletBalance, SavedWallets } from './types';
-import { EnvFileManager } from './envManager';
 import SmartContractManager from './SmartContractManager';
 import './App.css';
 
@@ -77,55 +76,6 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
-  const exportToEnvFile = () => {
-    try {
-      EnvFileManager.downloadEnvFile(savedWallets);
-      alert('.env file downloaded successfully! Keep this file secure and never commit it to version control.');
-    } catch (err) {
-      setError('Failed to export .env file: ' + (err as Error).message);
-    }
-  };
-
-  const importFromEnvFile = async () => {
-    try {
-      setError('');
-      const envWallets = await EnvFileManager.loadEnvFile();
-      
-      if (envWallets.length === 0) {
-        setError('No valid wallet data found in the .env file');
-        return;
-      }
-
-      // Convert env wallet data to our wallet format
-      const newWallets: Wallet[] = envWallets.map((envWallet, index) => ({
-        address: envWallet.address,
-        privateKey: envWallet.privateKey,
-        mnemonic: envWallet.mnemonic,
-        createdAt: new Date().toISOString(),
-        name: envWallet.name || `Imported Wallet ${index + 1}`
-      }));
-
-      // Merge with existing wallets (avoid duplicates)
-      const existingAddresses = new Set(savedWallets.map(w => w.address));
-      const uniqueNewWallets = newWallets.filter(w => !existingAddresses.has(w.address));
-
-      if (uniqueNewWallets.length === 0) {
-        alert('All wallets from the .env file already exist in your saved wallets.');
-        return;
-      }
-
-      const updatedWallets = [...savedWallets, ...uniqueNewWallets];
-      const walletData: SavedWallets = { wallets: updatedWallets };
-      
-      localStorage.setItem('ethereum-wallets', JSON.stringify(walletData));
-      setSavedWallets(updatedWallets);
-      
-      alert(`Successfully imported ${uniqueNewWallets.length} wallet(s) from .env file!`);
-    } catch (err) {
-      setError('Failed to import .env file: ' + (err as Error).message);
-    }
-  };
-
   const deleteWallet = (address: string) => {
     if (confirm('Are you sure you want to delete this wallet? This action cannot be undone.')) {
       try {
@@ -184,8 +134,8 @@ function App() {
     setError('');
 
     try {
-      // Using Sepolia testnet provider from environment variables
-      const rpcUrl = import.meta.env.VITE_ETHEREUM_RPC_URL || 'https://sepolia.infura.io/v3/135887a7cd1544ee9c68a3d6fc24d10e';
+      // Using Sepolia testnet provider
+      const rpcUrl = 'https://sepolia.infura.io/v3/135887a7cd1544ee9c68a3d6fc24d10e';
       const provider = new ethers.JsonRpcProvider(rpcUrl);
       const balanceWei = await provider.getBalance(wallet.address);
       const balanceEth = ethers.formatEther(balanceWei);
@@ -258,29 +208,13 @@ function App() {
           )}
           
           {savedWallets.length > 0 && (
-            <>
-              <button 
-                onClick={() => setShowSavedWallets(!showSavedWallets)}
-                className="show-saved-btn"
-              >
-                📂 {showSavedWallets ? 'Hide' : 'Show'} Saved Wallets ({savedWallets.length})
-              </button>
-              
-              <button 
-                onClick={exportToEnvFile}
-                className="export-env-btn"
-              >
-                📄 Export to .env
-              </button>
-            </>
+            <button 
+              onClick={() => setShowSavedWallets(!showSavedWallets)}
+              className="show-saved-btn"
+            >
+              📂 {showSavedWallets ? 'Hide' : 'Show'} Saved Wallets ({savedWallets.length})
+            </button>
           )}
-          
-          <button 
-            onClick={importFromEnvFile}
-            className="import-env-btn"
-          >
-            📥 Import from .env
-          </button>
         </div>
 
         {error && (

@@ -87,8 +87,6 @@
 .check-balance-btn,
 .save-wallet-btn,
 .show-saved-btn,
-.export-env-btn,
-.import-env-btn,
 .balance-check-btn {
   padding: 15px 30px;
   font-size: 1.1em;
@@ -142,26 +140,6 @@
 
 .show-saved-btn:hover {
   background-color: #7B1FA2;
-  transform: translateY(-2px);
-}
-
-.export-env-btn {
-  background-color: #795548;
-  color: white;
-}
-
-.export-env-btn:hover {
-  background-color: #5D4037;
-  transform: translateY(-2px);
-}
-
-.import-env-btn {
-  background-color: #607D8B;
-  color: white;
-}
-
-.import-env-btn:hover {
-  background-color: #455A64;
   transform: translateY(-2px);
 }
 
@@ -592,9 +570,7 @@
   .create-wallet-btn,
   .check-balance-btn,
   .save-wallet-btn,
-  .show-saved-btn,
-  .export-env-btn,
-  .import-env-btn {
+  .show-saved-btn {
     width: 100%;
     max-width: 300px;
   }

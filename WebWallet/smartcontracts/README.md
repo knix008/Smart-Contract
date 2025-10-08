@@ -18,17 +18,15 @@ cd smartcontracts
 npm install
 ```
 
-### 2. Environment Setup
+### 2. Configuration Setup
 
-Copy and configure the `.env` file in the parent directory:
+The smart contracts are pre-configured with default settings:
 
-```bash
-# Smart Contract Deployment Configuration
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/135887a7cd1544ee9c68a3d6fc24d10e
-MAINNET_RPC_URL=https://mainnet.infura.io/v3/YOUR_PROJECT_ID
-PRIVATE_KEY=your_private_key_without_0x_prefix
-ETHERSCAN_API_KEY=your_etherscan_api_key_for_verification
-```
+- **Sepolia RPC**: Using Infura public endpoint for testnet deployment
+- **Network Support**: Sepolia testnet and Ethereum mainnet
+- **Development**: Local Hardhat network for testing
+
+To deploy contracts to live networks, you may need to update the network configuration in `hardhat.config.js` with your own RPC URLs and private keys.
 
 ### 3. Compile Contracts
 
@@ -197,9 +195,8 @@ Total: 21/21 tests passing ✅
 
 ### Current Configuration
 
-- **Sepolia RPC**: Connected via Infura
-- **Private Key**: Configured in .env
-- **Deployer Address**: `0x8bB041C96042646a04abd0f2Cdb6f1316cDC507b`
+- **Sepolia RPC**: Connected via Infura public endpoint
+- **Network Support**: Pre-configured for Sepolia testnet and Ethereum mainnet
 - **Gas Optimization**: Enabled (200 runs)
 - **Solidity Versions**: 0.8.19 and 0.8.20 support
 
@@ -209,8 +206,8 @@ Total: 21/21 tests passing ✅
 
 1. ✅ Contracts compiled successfully
 2. ✅ All tests passing (21/21)
-3. ✅ Environment variables configured
-4. ⏳ Sepolia ETH balance (check with `npm run balance:sepolia`)
+3. ✅ Network configuration ready
+4. ⏳ Sepolia ETH balance (ensure you have testnet ETH)
 5. ⏳ Ready for deployment
 
 ### Deployment Steps
@@ -280,8 +277,7 @@ const walletFactory = new ethers.Contract(
 - ✅ Error messages for debugging
 
 ### Deployment Security
-- ✅ Environment variable protection
-- ✅ Private key management
+- ✅ Secure configuration management
 - ✅ Network-specific configurations
 - ✅ Gas estimation before deployment
 - ✅ Balance verification
@@ -315,9 +311,9 @@ npm run balance:sepolia
 ```
 
 **4. Network Connection Issues**
-- Verify RPC URL in .env file
-- Check Infura project status
-- Ensure private key is correct (without 0x prefix)
+- Verify network configuration in hardhat.config.js
+- Check Infura endpoint status
+- Ensure network connectivity
 
 **5. Gas Estimation Errors**
 - Increase gas limit in hardhat.config.js
