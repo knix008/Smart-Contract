@@ -1,0 +1,453 @@
+.App {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.App-header {
+  margin-bottom: 40px;
+}
+
+.App-header h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #4CAF50;
+}
+
+.App-header p {
+  font-size: 1.2em;
+  color: #666;
+  margin: 0;
+}
+
+.App-main {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.wallet-controls {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.create-wallet-btn,
+.check-balance-btn,
+.save-wallet-btn,
+.show-saved-btn {
+  padding: 15px 30px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.create-wallet-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.create-wallet-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.check-balance-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.check-balance-btn:hover:not(:disabled) {
+  background-color: #1976D2;
+  transform: translateY(-2px);
+}
+
+.check-balance-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.save-wallet-btn {
+  background-color: #FF9800;
+  color: white;
+}
+
+.save-wallet-btn:hover {
+  background-color: #F57C00;
+  transform: translateY(-2px);
+}
+
+.show-saved-btn {
+  background-color: #9C27B0;
+  color: white;
+}
+
+.show-saved-btn:hover {
+  background-color: #7B1FA2;
+  transform: translateY(-2px);
+}
+
+.error-message {
+  padding: 15px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 8px;
+  border-left: 4px solid #f44336;
+  text-align: left;
+  font-weight: 500;
+}
+
+.wallet-info,
+.balance-info,
+.saved-wallets {
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  text-align: left;
+}
+
+.wallet-info h2,
+.balance-info h2,
+.saved-wallets h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 10px;
+}
+
+.info-item {
+  margin-bottom: 20px;
+}
+
+.info-item label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #34495e;
+  font-size: 1.1em;
+}
+
+.copyable-field {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.copyable-field input,
+.copyable-field textarea {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.copyable-field input:focus,
+.copyable-field textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.copyable-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.copyable-field button {
+  padding: 12px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.copyable-field button:hover {
+  background-color: #5a6268;
+}
+
+.warning {
+  display: block;
+  color: #e67e22;
+  font-weight: 500;
+  margin-top: 5px;
+  font-size: 0.9em;
+}
+
+.balance-info {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.balance-info h2 {
+  color: white;
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.balance-display {
+  text-align: center;
+  padding: 20px;
+}
+
+.balance-amount {
+  display: block;
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.balance-address {
+  display: block;
+  font-size: 0.9em;
+  opacity: 0.8;
+  word-break: break-all;
+}
+
+.info-section {
+  background-color: #e8f4fd;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #2196F3;
+  text-align: left;
+}
+
+.info-section h3 {
+  margin-top: 0;
+  color: #1976D2;
+}
+
+.info-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-section li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Saved Wallets Styles */
+.saved-wallets {
+  background-color: #f0f4f8;
+  border-left: 4px solid #9C27B0;
+}
+
+.wallet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.saved-wallet-item {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.saved-wallet-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wallet-summary h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.wallet-address {
+  margin: 5px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  color: #666;
+  word-break: break-all;
+}
+
+.created-date {
+  margin: 5px 0 0 0;
+  font-size: 0.8em;
+  color: #888;
+}
+
+.wallet-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.load-btn,
+.delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.load-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.load-btn:hover {
+  background-color: #45a049;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .App {
+    color: #f0f0f0;
+  }
+  
+  .App-header p {
+    color: #ccc;
+  }
+  
+  .wallet-info,
+  .balance-info,
+  .saved-wallets {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #f0f0f0;
+  }
+  
+  .wallet-info h2,
+  .balance-info h2,
+  .saved-wallets h2 {
+    color: #f0f0f0;
+  }
+  
+  .saved-wallets {
+    background-color: #2d3748;
+  }
+  
+  .saved-wallet-item {
+    background-color: #1a202c;
+    border-color: #4a5568;
+    color: #f0f0f0;
+  }
+  
+  .wallet-summary h3 {
+    color: #e2e8f0;
+  }
+  
+  .wallet-address {
+    color: #a0aec0;
+  }
+  
+  .created-date {
+    color: #718096;
+  }
+  
+  .info-item label {
+    color: #e2e8f0;
+  }
+  
+  .copyable-field input,
+  .copyable-field textarea {
+    background-color: #1a202c;
+    border-color: #4a5568;
+    color: #f0f0f0;
+  }
+  
+  .copyable-field input:focus,
+  .copyable-field textarea:focus {
+    border-color: #4CAF50;
+  }
+  
+  .error-message {
+    background-color: #fed7d7;
+    color: #c53030;
+  }
+  
+  .info-section {
+    background-color: #2a4365;
+    color: #f0f0f0;
+  }
+  
+  .info-section h3 {
+    color: #63b3ed;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
+  
+  .App-header h1 {
+    font-size: 2em;
+  }
+  
+  .wallet-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .create-wallet-btn,
+  .check-balance-btn,
+  .save-wallet-btn,
+  .show-saved-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .copyable-field {
+    flex-direction: column;
+  }
+  
+  .copyable-field button {
+    align-self: flex-start;
+  }
+  
+  .balance-amount {
+    font-size: 2em;
+  }
+  
+  .saved-wallet-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .wallet-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .load-btn,
+  .delete-btn {
+    flex: 1;
+  }
+}

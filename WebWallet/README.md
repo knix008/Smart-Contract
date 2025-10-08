@@ -1,312 +1,178 @@
-# 🚀 Ethereum Web Wallet
+# Ethereum Wallet Generator
 
-A comprehensive web-based Ethereum wallet with smart contract compilation, deployment, and interaction capabilities. Features automated `.env` configuration loading, contract interaction tools, and comprehensive testing infrastructure.
+A React application for creating3. **Save Wallet**:
+   - After creating a wallet, click "💾 Save Wallet" to store it locally
+   - A backup JSON file will automatically download to your computer
+   - Saved wallets are stored in browser localStorage
 
-## ✨ Features
+4. **Manage Saved Wallets**:
+   - Click "📂 Show Saved Wallets" to view all saved wallets
+   - Use "📥 Load" to switch to a saved wallet
+   - Use "🗑️ Delete" to remove a wallet from storage
 
-### 💳 Wallet Management
-- **Create New Ethereum Account** - Generate secure wallets with one click
-- **ETH Balance Checking** - Real-time balance display with network information
-- **Credential Management** - Secure private key handling and address display
-- **Copy & Download** - Easy clipboard copy and `.env` file generation
-- **Multi-Network Support** - Sepolia testnet, Ethereum mainnet, and custom RPCs
+5. **Check Balance**:
+   - After creating or loading a wallet, click "💰 Check Balance"
+   - The app will connect to Ethereum mainnet and display the current ETH balance
 
-### 🔧 Smart Contract Tools
-- **Local Compilation** - Compile Solidity contracts with OpenZeppelin support
-- **Multi-Network Deployment** - Deploy to any network with custom RPC URLs
-- **Contract Interaction** - Full contract interaction interface with balance checking
-- **Constructor Arguments** - Complete support for parameterized deployments
-- **Gas Estimation** - Real-time gas cost calculations and optimization
+6. **Copy Wallet Information**:Ethereum wallets and checking their balances.
 
-### ⚙️ Configuration Management
-- **Automated .env Loading** - Auto-populate all fields from environment variables
-- **Network Selection** - Pre-configured networks with custom RPC support
-- **Private Key Integration** - Secure credential management from `.env` files
-- **Contract Address Management** - Persistent contract address storage
+## Features
 
-### 🧪 Testing Infrastructure
-- **Comprehensive Test Suite** - Complete testing framework for accounts and contracts
-- **Account Validation** - Balance checking and network connectivity tests
-- **Contract Testing** - Deployed contract interaction and function call tests
-- **Network Health Checks** - RPC connectivity and performance monitoring
-- **Deployment Readiness** - Pre-deployment validation and gas estimation
+- 🔑 **Generate New Wallets**: Create completely new Ethereum wallets with random private keys
+- 💰 **Check Balances**: View ETH balance for any generated wallet
+- � **Save Wallets**: Save wallet information locally with automatic backup downloads
+- 📂 **Wallet Management**: Load, view, and delete saved wallets
+- �📋 **Copy Functionality**: Easy copy-to-clipboard for addresses, private keys, and mnemonic phrases
+- 🔐 **Security Warnings**: Built-in reminders about wallet security best practices
+- 📱 **Responsive Design**: Works on desktop and mobile devices
+- 🌙 **Dark Mode Support**: Automatic dark/light mode based on system preferences
+- 📄 **Backup Files**: Automatic JSON backup file downloads for wallet data
 
-## 🚀 Quick Start
+## What This App Does
 
-### 1. Installation
+1. **Wallet Creation**: Generates a new Ethereum wallet with:
+   - Public address (for receiving funds)
+   - Private key (for accessing the wallet)
+   - 12-word mnemonic phrase (for wallet recovery)
 
+2. **Balance Checking**: Connects to Ethereum mainnet to check the ETH balance of generated wallets
+
+3. **User Interface**: Provides a clean, intuitive web interface for all wallet operations
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 16 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Install dependencies:
 ```bash
-# Clone and install dependencies
 npm install
 ```
 
-### 2. Environment Setup
-
-Create a `.env` file with your configuration:
-
-```env
-# Account Configuration
-ACCOUNT_ADDRESS=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
-PRIVATE_KEY=0x1234...
-
-# Network Configuration  
-RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
-DEFAULT_NETWORK=sepolia
-
-# Contract Configuration (after deployment)
-CONTRACT_ADDRESS=0xabcd...
-
-# Constructor Arguments
-MYTOKEN_INITIAL_OWNER=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
-SIMPLETOKEN_NAME=MyToken
-SIMPLETOKEN_SYMBOL=MTK
-SIMPLETOKEN_INITIAL_SUPPLY=1000000
-```
-
-### 3. Start the Application
-
+2. Start the development server:
 ```bash
-# Start web server
-npm run serve
-
-# Open browser to http://localhost:8080
+npm run dev
 ```
 
-## 🛠️ Development Workflow
+3. Open your browser and navigate to `http://localhost:5173`
 
-### Smart Contract Development
+### Available Scripts
 
-```bash
-# 1. Compile contracts
-npm run compile:erc20      # Compile MyERC20Token
-npm run compile:simple     # Compile SimpleToken
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-# 2. Test your setup
-npm run test               # Run all tests
-npm run test:account       # Test account balance
-npm run test:network       # Test RPC connectivity
+## How to Use
 
-# 3. Deploy contracts
-npm run deploy             # Deploy to configured network
-npm run deploy:sepolia     # Deploy specifically to Sepolia
+1. **Create a New Wallet**:
+   - Click the "🔑 Create New Wallet" button
+   - A new wallet will be generated with a unique address, private key, and mnemonic phrase
 
-# 4. Validate deployment
-npm run test:contract      # Test deployed contract interaction
+2. **Check Balance**:
+   - After creating a wallet, click "💰 Check Balance"
+   - The app will connect to Ethereum mainnet and display the current ETH balance
 
-# 5. Interact with contracts
-npm run interact           # Command-line contract interaction
-```
+3. **Copy Wallet Information**:
+   - Use the "📋 Copy" buttons to copy address, private key, or mnemonic phrase
+   - Store this information securely!
 
-## 📱 Web Interface Usage
+## Important Security Notes
 
-### Tab 1: Create Wallet
-1. **Auto-loaded Configuration** - Fields automatically populate from `.env` file
-2. **Create New Account** - Generate secure Ethereum wallet
-3. **Check ETH Balance** - Real-time balance checking with network info
-4. **Download Credentials** - Save wallet data to `.env` file format
+⚠️ **This application is for educational purposes only**
 
-### Tab 2: Deploy Contract
-1. **Network Selection** - Choose from pre-configured networks or custom RPC
-2. **Contract Upload** - Load compiled contracts from `compiled/` directory
-3. **Constructor Configuration** - Auto-filled from `.env` file
-4. **Deploy & Verify** - One-click deployment with transaction tracking
+- **Never use generated wallets for real funds without proper security measures**
+- **Private keys and mnemonic phrases give full access to wallets**
+- **Always use hardware wallets or established wallet software for significant amounts**
+- **This app generates wallets client-side, but for maximum security, use offline generation**
 
-### Tab 3: Interact with Contract
-1. **Contract Connection** - Automatic connection using `CONTRACT_ADDRESS` from `.env`
-2. **Balance Checking** - Check both ETH and token balances
-3. **Contract Functions** - Call read functions (name, symbol, totalSupply)
-4. **Transaction History** - Track all contract interactions
+## Technical Details
 
-## 🧪 Testing Framework
+### Technologies Used
 
-### Available Tests
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **ethers.js** for Ethereum blockchain interactions
+- **CSS3** with responsive design and dark mode support
 
-```bash
-npm run test                # Run complete test suite
-npm run test:account        # Test account balance and network
-npm run test:contract       # Test deployed contract interaction
-npm run test:deployment     # Test deployment readiness
-npm run test:network        # Test RPC connectivity and performance
-```
+### Blockchain Integration
 
-### Test Coverage
-- ✅ **Account Validation** - Balance, network connectivity, gas prices
-- ✅ **Network Health** - RPC response times, chain ID verification
-- ✅ **Contract Interaction** - ABI loading, function calls, transaction estimation
-- ✅ **Deployment Readiness** - Balance sufficiency, gas estimation, compilation check
+- Uses ethers.js library for wallet generation and blockchain interactions
+- Connects to Ethereum mainnet via public RPC endpoints
+- Generates wallets using cryptographically secure random number generation
 
-## 📁 Project Structure
+### Wallet Storage
 
-```
-WebWallet/
-├── index.html              # Main web application
-├── package.json            # Dependencies and scripts
-├── .env                    # Environment configuration
-├── deploy-mytoken.js       # MyToken deployment script
-├── deploy-simpletoken.js   # SimpleToken deployment script
-├── interact-contract.js    # CLI contract interaction tool
-├── compiled/               # Compiled contract artifacts
-│   ├── MyToken.json        # MyERC20Token compilation output
-│   └── SimpleToken.json    # SimpleToken compilation output
-├── scripts/                # Utility scripts
-│   └── compile.js          # Contract compilation script
-├── SmartContract/          # Solidity source files
-│   └── contacts/
-│       ├── MyERC20Token.sol
-│       └── SimpleToken.sol
-└── test/                   # Testing infrastructure
-    ├── README.md           # Testing documentation
-    ├── test-all.js         # Master test suite
-    ├── test-account.js     # Account testing
-    ├── test-contract.js    # Contract testing
-    ├── test-deployment.js  # Deployment testing
-    └── test-network.js     # Network testing
-```
+- **Local Storage**: Wallets are saved in browser localStorage for easy access
+- **Backup Files**: Each save operation creates a downloadable JSON backup file
+- **File Format**: Backup files contain all wallet information in JSON format
+- **File Location**: Downloads go to your browser's default download folder
+- **Security**: Local storage is browser-specific and not shared across devices
 
-## 🔐 Security Features
+### Backup File Structure
 
-### Private Key Management
-- **Environment Variables** - Secure storage in `.env` files
-- **Browser Security** - No private key exposure in web interface
-- **Git Protection** - `.gitignore` prevents accidental commits
-- **Local Processing** - All operations happen locally
-
-### Network Security
-- **RPC URL Validation** - Secure connection verification
-- **Transaction Simulation** - Gas estimation before execution
-- **Balance Validation** - Insufficient balance warnings
-- **Network Verification** - Chain ID and network name validation
-
-## 📚 Advanced Features
-
-### Custom Network Configuration
-```env
-# Add any custom network
-RPC_URL=https://your-custom-rpc.com
-DEFAULT_NETWORK=custom
-```
-
-### Multi-Contract Support
-```bash
-# Deploy different contracts
-npm run deploy              # Deploy MyERC20Token
-npm run deploy:simple       # Deploy SimpleToken
-
-# Test different contracts
-CONTRACT_ADDRESS=0x... npm run test:contract
-```
-
-### Development Scripts
-```bash
-# Compilation
-npm run compile             # Compile all contracts
-node scripts/compile.js SmartContract/contacts/YourContract.sol
-
-# Deployment with environment override
-NETWORK=sepolia npm run deploy
-RPC_URL=http://localhost:8545 npm run deploy:local
-
-# Contract interaction
-npm run interact            # CLI-based contract interaction
-```
-
-## 🛠️ Development Tools
-
-### Available NPM Scripts
 ```json
 {
-  "compile": "Compile all contracts",
-  "compile:erc20": "Compile MyERC20Token", 
-  "compile:simple": "Compile SimpleToken",
-  "deploy": "Deploy MyToken to configured network",
-  "deploy:sepolia": "Deploy specifically to Sepolia",
-  "interact": "CLI contract interaction tool",
-  "serve": "Start local web server",
-  "test": "Run all tests",
-  "test:account": "Test account functionality",
-  "test:contract": "Test contract interaction", 
-  "test:deployment": "Test deployment readiness",
-  "test:network": "Test network connectivity"
+  "wallets": [
+    {
+      "address": "0x...",
+      "privateKey": "0x...",
+      "mnemonic": "word1 word2 ...",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "name": "Wallet 1"
+    }
+  ]
 }
 ```
 
-### Environment Variables Reference
-```env
-# Required for all operations
-ACCOUNT_ADDRESS=0x...       # Your Ethereum address
-PRIVATE_KEY=0x...          # Your private key (keep secure!)
-RPC_URL=https://...        # RPC endpoint URL
+### Network Configuration
 
-# Optional network configuration
-DEFAULT_NETWORK=sepolia    # Default network name
+The app currently uses Ethereum mainnet. To use testnets:
 
-# Contract address (set after deployment)
-CONTRACT_ADDRESS=0x...     # Deployed contract address
+1. Modify the provider URL in `src/App.tsx`
+2. Replace `https://eth.llamarpc.com` with:
+   - Sepolia testnet: `https://rpc.sepolia.org`
+   - Goerli testnet: `https://goerli.infura.io/v3/YOUR_PROJECT_ID`
 
-# Constructor arguments for MyERC20Token
-MYTOKEN_INITIAL_OWNER=0x...
+## Development
 
-# Constructor arguments for SimpleToken
-SIMPLETOKEN_NAME=MyToken
-SIMPLETOKEN_SYMBOL=MTK
-SIMPLETOKEN_INITIAL_SUPPLY=1000000
+### Project Structure
+
+```
+src/
+├── App.tsx          # Main application component
+├── App.css          # Application styles
+├── main.tsx         # Application entry point
+├── index.css        # Global styles
+└── vite-env.d.ts    # Vite type definitions
 ```
 
-## 🚨 Troubleshooting
+### Key Components
 
-### Common Issues
+- **Wallet Creation**: Uses `ethers.Wallet.createRandom()` for secure wallet generation
+- **Balance Checking**: Connects to Ethereum RPC endpoints to fetch balances
+- **UI Components**: Responsive React components with TypeScript
 
-1. **"RPC_URL not found"**
-   ```bash
-   # Add to .env file
-   echo "RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID" >> .env
-   ```
-
-2. **"No contract at address"**
-   ```bash
-   # Deploy contract first
-   npm run deploy
-   # Update CONTRACT_ADDRESS in .env
-   ```
-
-3. **"Insufficient balance"**
-   - Get testnet ETH from faucets:
-     - https://faucets.chain.link/sepolia
-     - https://sepoliafaucet.com
-
-4. **Compilation errors**
-   ```bash
-   # Install dependencies
-   npm install
-   # Check Solidity version compatibility
-   ```
-
-### Debug Mode
-```bash
-# Enable detailed logging
-DEBUG=true npm run test
-DEBUG=true npm run deploy
-```
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## 📄 License
+## License
 
-MIT License - see LICENSE file for details.
+This project is for educational purposes. Use at your own risk.
 
-## 🔗 Resources
+## Disclaimer
 
-- [ethers.js Documentation](https://docs.ethers.org/)
-- [OpenZeppelin Contracts](https://openzeppelin.com/contracts/)
-- [Sepolia Testnet Faucets](https://faucets.chain.link/sepolia)
-- [Solidity Documentation](https://docs.soliditylang.org/)
-
----
-
-**⚠️ Security Notice:** Never share your private keys or commit `.env` files to version control. This application is for development and testing purposes.
+This wallet generator is a learning tool. For production use:
+- Use established wallet software
+- Follow proper security practices
+- Never share private keys or mnemonic phrases
+- Consider hardware wallets for significant funds
