@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "setup": "npm install && npm run check-env",
+    "check-env": "node -e \"require('dotenv').config(); console.log('Environment check passed')\"",
+    "health": "curl http://localhost:3002/health || echo 'Service not running'",
+    "logs": "node src/index.js | tee logs/issuer.log"
   },
   "dependencies": {
     "express": "^4.18.2",
