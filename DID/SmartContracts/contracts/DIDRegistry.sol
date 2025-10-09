@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -146,7 +146,7 @@ contract DIDRegistry is Ownable {
         uint256 expirationDate,
         bytes memory signature
     ) external didExists(issuerDID) {
-        require(!credentials[credentialId].issuanceDate != 0, "Credential already exists");
+        require(credentials[credentialId].issuanceDate == 0, "Credential already exists");
         require(didDocuments[issuerDID].owner == msg.sender, "Not authorized to issue for this DID");
         require(expirationDate > block.timestamp, "Expiration date must be in the future");
 
