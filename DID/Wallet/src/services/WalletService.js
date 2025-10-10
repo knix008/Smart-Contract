@@ -3,9 +3,20 @@ const crypto = require('crypto');
 
 class WalletService {
   constructor() {
-    this.provider = new ethers.JsonRpcProvider(
-      process.env.RPC_URL || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY'
-    );
+    // Only create provider if RPC_URL is properly configured
+    const rpcUrl = process.env.RPC_URL;
+    if (rpcUrl && rpcUrl !== 'YOUR_INFURA_KEY' && !rpcUrl.includes('YOUR_INFURA_KEY')) {
+      try {
+        this.provider = new ethers.JsonRpcProvider(rpcUrl);
+        console.log(`🌐 Connected to RPC: ${rpcUrl}`);
+      } catch (error) {
+        console.warn(`⚠️  Failed to connect to RPC: ${error.message}`);
+        this.provider = null;
+      }
+    } else {
+      console.log('⚠️  No valid RPC URL configured. Some features (balance, transactions) will be limited.');
+      this.provider = null;
+    }
     this.wallets = new Map(); // In-memory storage for demo (use secure storage in production)
   }
 
@@ -17,9 +28,6 @@ class WalletService {
     try {
       // Generate random wallet
       const wallet = ethers.Wallet.createRandom();
-      
-      // Connect to provider
-      const connectedWallet = wallet.connect(this.provider);
       
       const walletInfo = {
         address: wallet.address,
@@ -127,6 +135,19 @@ class WalletService {
    */
   async getBalance(address) {
     try {
+      if (!this.provider) {
+        return {
+          success: true,
+          data: {
+            address,
+            balance: '0',
+            balanceInEth: '0.0',
+            network: 'sepolia',
+            note: 'RPC not configured - showing default balance'
+          }
+        };
+      }
+
       const balance = await this.provider.getBalance(address);
       const balanceInEth = ethers.formatEther(balance);
       
@@ -155,6 +176,17 @@ class WalletService {
    */
   async getTransactionHistory(address) {
     try {
+      if (!this.provider) {
+        return {
+          success: true,
+          data: {
+            address,
+            transactions: [],
+            note: 'RPC not configured - showing empty transaction history'
+          }
+        };
+      }
+
       // Get recent transactions (this is a simplified version)
       const latestBlock = await this.provider.getBlockNumber();
       const transactions = [];
@@ -263,6 +295,13 @@ class WalletService {
    */
   async sendTransaction(fromAddress, toAddress, amount) {
     try {
+      if (!this.provider) {
+        return {
+          success: false,
+          error: 'RPC provider not configured. Cannot send transactions without blockchain connection.'
+        };
+      }
+
       const walletData = this.wallets.get(fromAddress);
       if (!walletData) {
         throw new Error('Wallet not found');
@@ -299,10 +338,13 @@ class WalletService {
 
   /**
    * Get all wallets (for development purposes)
-   * @returns {Array} List of wallet addresses
+   * @returns {Array} List of wallet information
    */
   getAllWallets() {
-    return Array.from(this.wallets.keys());
+    return Array.from(this.wallets.keys()).map(address => ({
+      address: address,
+      type: 'generated' // or could be 'imported' based on how wallet was created
+    }));
   }
 
   /**

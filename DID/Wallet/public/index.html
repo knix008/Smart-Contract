@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DID Wallet - Decentralized Identity Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-wallet me-2"></i>
+                DID Wallet
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wallets">
+                            <i class="fas fa-wallet me-1"></i>
+                            Wallets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dids">
+                            <i class="fas fa-id-card me-1"></i>
+                            DIDs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#transactions">
+                            <i class="fas fa-exchange-alt me-1"></i>
+                            Transactions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tools">
+                            <i class="fas fa-tools me-1"></i>
+                            Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Dashboard Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-tachometer-alt text-primary me-2"></i>
+                            Dashboard Overview
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-icon bg-primary-custom">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div class="stats-info">
+                                        <h3 class="stats-number" id="totalWallets">0</h3>
+                                        <p class="stats-label">Total Wallets</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-icon bg-success-custom">
+                                        <i class="fas fa-id-card"></i>
+                                    </div>
+                                    <div class="stats-info">
+                                        <h3 class="stats-number" id="totalDIDs">0</h3>
+                                        <p class="stats-label">Active DIDs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-icon bg-info-custom">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                    <div class="stats-info">
+                                        <h3 class="stats-number" id="totalBalance">0.00</h3>
+                                        <p class="stats-label">Total ETH</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-icon bg-warning-custom">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="stats-info">
+                                        <h3 class="stats-number" id="totalTransactions">0</h3>
+                                        <p class="stats-label">Transactions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallets Section -->
+        <div class="row mb-4" id="wallets">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-wallet text-primary me-2"></i>
+                            Wallet Management
+                        </h5>
+                        <div>
+                            <button class="btn btn-success-custom btn-sm me-2" onclick="showGenerateWalletModal()">
+                                <i class="fas fa-plus me-1"></i>
+                                Generate Wallet
+                            </button>
+                            <button class="btn btn-primary-custom btn-sm" onclick="showImportWalletModal()">
+                                <i class="fas fa-download me-1"></i>
+                                Import Wallet
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="walletsContainer">
+                            <!-- Wallets will be loaded here -->
+                        </div>
+                        <div id="noWallets" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-wallet fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Wallets Found</h5>
+                            <p class="text-muted">Generate or import your first wallet to get started</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIDs Section -->
+        <div class="row mb-4" id="dids">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-id-card text-success me-2"></i>
+                            DID Management
+                        </h5>
+                        <button class="btn btn-success-custom btn-sm" onclick="showRegisterDIDModal()">
+                            <i class="fas fa-plus me-1"></i>
+                            Register DID
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="didsContainer">
+                            <!-- DIDs will be loaded here -->
+                        </div>
+                        <div id="noDIDs" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-id-card fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No DIDs Registered</h5>
+                            <p class="text-muted">Register your first DID to start using decentralized identity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div class="row mb-4" id="transactions">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exchange-alt text-info me-2"></i>
+                            Transaction Management
+                        </h5>
+                        <button class="btn btn-primary-custom btn-sm" onclick="showSendTransactionModal()">
+                            <i class="fas fa-paper-plane me-1"></i>
+                            Send Transaction
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="walletSelect" class="form-label">Select Wallet</label>
+                                <select class="form-select" id="walletSelect" onchange="loadTransactions()">
+                                    <option value="">Choose a wallet...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <button class="btn btn-outline-primary" onclick="refreshTransactions()">
+                                    <i class="fas fa-sync-alt me-1"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div id="transactionsContainer">
+                            <!-- Transactions will be loaded here -->
+                        </div>
+                        <div id="noTransactions" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-exchange-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Transactions Found</h5>
+                            <p class="text-muted">Select a wallet to view transaction history</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <div class="row mb-4" id="tools">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tools text-warning me-2"></i>
+                            Utility Tools
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="tool-card">
+                                    <h6>
+                                        <i class="fas fa-signature text-primary me-2"></i>
+                                        Message Signing
+                                    </h6>
+                                    <p class="text-muted">Sign messages with your wallet for authentication</p>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="showSignMessageModal()">
+                                        <i class="fas fa-pen me-1"></i>
+                                        Sign Message
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="tool-card">
+                                    <h6>
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Signature Verification
+                                    </h6>
+                                    <p class="text-muted">Verify signed messages and their authenticity</p>
+                                    <button class="btn btn-outline-success btn-sm" onclick="showVerifyMessageModal()">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Verify Signature
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Generate Wallet Modal -->
+    <div class="modal fade" id="generateWalletModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle text-success me-2"></i>
+                        Generate New Wallet
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        A new wallet will be generated with a random private key and mnemonic phrase.
+                        <strong>Make sure to save your private key and mnemonic securely!</strong>
+                    </div>
+                    <div id="newWalletInfo" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="newWalletAddress" readonly>
+                                <button class="btn btn-outline-secondary" onclick="copyToClipboard('newWalletAddress')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Private Key</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="newWalletPrivateKey" readonly>
+                                <button class="btn btn-outline-secondary" onclick="togglePassword('newWalletPrivateKey')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="copyToClipboard('newWalletPrivateKey')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mnemonic Phrase</label>
+                            <div class="input-group">
+                                <textarea class="form-control" id="newWalletMnemonic" rows="3" readonly></textarea>
+                                <button class="btn btn-outline-secondary" onclick="copyToClipboard('newWalletMnemonic')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Security Warning:</strong> Save this information in a secure location. 
+                            Anyone with access to your private key or mnemonic can control your wallet.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success-custom" onclick="generateWallet()" id="generateBtn">
+                        <i class="fas fa-magic me-1"></i>
+                        Generate Wallet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Wallet Modal -->
+    <div class="modal fade" id="importWalletModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-download text-primary me-2"></i>
+                        Import Wallet
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="importTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="private-key-tab" data-bs-toggle="tab" data-bs-target="#private-key-pane" type="button">
+                                <i class="fas fa-key me-1"></i>
+                                Private Key
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mnemonic-tab" data-bs-toggle="tab" data-bs-target="#mnemonic-pane" type="button">
+                                <i class="fas fa-list me-1"></i>
+                                Mnemonic
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3" id="importTabContent">
+                        <div class="tab-pane fade show active" id="private-key-pane">
+                            <div class="mb-3">
+                                <label for="importPrivateKey" class="form-label">Private Key</label>
+                                <input type="password" class="form-control" id="importPrivateKey" placeholder="Enter your private key (with or without 0x prefix)">
+                                <div class="form-text">
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Your private key is processed locally and never sent to external servers
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="mnemonic-pane">
+                            <div class="mb-3">
+                                <label for="importMnemonic" class="form-label">Mnemonic Phrase</label>
+                                <textarea class="form-control" id="importMnemonic" rows="3" placeholder="Enter your 12 or 24 word mnemonic phrase"></textarea>
+                                <div class="form-text">
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Your mnemonic is processed locally and never sent to external servers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="importWallet()">
+                        <i class="fas fa-download me-1"></i>
+                        Import Wallet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register DID Modal -->
+    <div class="modal fade" id="registerDIDModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-id-card text-success me-2"></i>
+                        Register New DID
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerDIDForm">
+                        <div class="mb-3">
+                            <label for="didWalletSelect" class="form-label">Select Wallet</label>
+                            <select class="form-select" id="didWalletSelect" required>
+                                <option value="">Choose a wallet...</option>
+                            </select>
+                            <div class="form-text">Select the wallet to associate with this DID</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Services (Optional)</label>
+                            <div id="servicesContainer">
+                                <div class="service-entry mb-2">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Service ID" name="serviceId">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Service Type" name="serviceType">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="url" class="form-control form-control-sm" placeholder="Service Endpoint" name="serviceEndpoint">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addServiceEntry()">
+                                <i class="fas fa-plus me-1"></i>
+                                Add Service
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success-custom" onclick="registerDID()">
+                        <i class="fas fa-id-card me-1"></i>
+                        Register DID
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Transaction Modal -->
+    <div class="modal fade" id="sendTransactionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-paper-plane text-primary me-2"></i>
+                        Send Transaction
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sendTransactionForm">
+                        <div class="mb-3">
+                            <label for="txFromWallet" class="form-label">From Wallet</label>
+                            <select class="form-select" id="txFromWallet" required onchange="updateWalletBalance()">
+                                <option value="">Choose sender wallet...</option>
+                            </select>
+                            <div class="form-text">
+                                Balance: <span id="senderBalance">0.00</span> ETH
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txToAddress" class="form-label">To Address</label>
+                            <input type="text" class="form-control" id="txToAddress" placeholder="0x..." required>
+                            <div class="form-text">Enter the recipient's Ethereum address</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txAmount" class="form-label">Amount (ETH)</label>
+                            <input type="number" class="form-control" id="txAmount" step="0.001" min="0" placeholder="0.001" required>
+                            <div class="form-text">Amount in ETH to send</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="sendTransaction()">
+                        <i class="fas fa-paper-plane me-1"></i>
+                        Send Transaction
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Message Modal -->
+    <div class="modal fade" id="signMessageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-signature text-primary me-2"></i>
+                        Sign Message
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signMessageForm">
+                        <div class="mb-3">
+                            <label for="signWalletSelect" class="form-label">Select Wallet</label>
+                            <select class="form-select" id="signWalletSelect" required>
+                                <option value="">Choose a wallet...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messageToSign" class="form-label">Message</label>
+                            <textarea class="form-control" id="messageToSign" rows="3" placeholder="Enter the message you want to sign" required></textarea>
+                        </div>
+                        <div id="signatureResult" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">Signature</label>
+                                <div class="input-group">
+                                    <textarea class="form-control" id="messageSignature" rows="3" readonly></textarea>
+                                    <button class="btn btn-outline-secondary" onclick="copyToClipboard('messageSignature')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="signMessage()">
+                        <i class="fas fa-pen me-1"></i>
+                        Sign Message
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verify Message Modal -->
+    <div class="modal fade" id="verifyMessageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-shield-alt text-success me-2"></i>
+                        Verify Message Signature
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="verifyMessageForm">
+                        <div class="mb-3">
+                            <label for="originalMessage" class="form-label">Original Message</label>
+                            <textarea class="form-control" id="originalMessage" rows="3" placeholder="Enter the original message" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messageSignatureToVerify" class="form-label">Signature</label>
+                            <textarea class="form-control" id="messageSignatureToVerify" rows="3" placeholder="Enter the signature to verify" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signerAddress" class="form-label">Signer Address</label>
+                            <input type="text" class="form-control" id="signerAddress" placeholder="0x..." required>
+                        </div>
+                        <div id="verificationResult" style="display: none;">
+                            <div class="alert" id="verificationAlert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span id="verificationText"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success-custom" onclick="verifyMessage()">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Verify Signature
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
