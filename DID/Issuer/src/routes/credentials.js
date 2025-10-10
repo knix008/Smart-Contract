@@ -26,14 +26,21 @@ router.post('/issue', [
   body('expirationDate').optional().isISO8601().withMessage('Expiration date must be valid ISO8601 date')
 ], handleValidation, async (req, res) => {
   try {
+    console.log('=== Issue Credential Request ===');
+    console.log('Subject DID:', req.body.subjectDID);
+    console.log('Credential Type:', req.body.credentialType);
+    
     const { subjectDID, credentialType, credentialSubject, expirationDate, additionalContext } = req.body;
 
     // Validate credential data against template
     const validation = issuerService.validateCredentialData(credentialType, credentialSubject);
+    
     if (!validation.success) {
+      console.log('❌ Validation failed');
       return res.status(400).json(validation);
     }
 
+    console.log('✅ Validation passed, issuing credential...');
     const result = await issuerService.issueCredential({
       subjectDID,
       credentialType,
@@ -43,12 +50,15 @@ router.post('/issue', [
     });
 
     if (result.success) {
+      console.log('✅ Credential issued successfully');
       res.status(201).json(result);
     } else {
+      console.log('❌ Credential issue failed:', result.error);
       res.status(400).json(result);
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('❌ Route error:', error.message);
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 });
 

@@ -380,8 +380,11 @@ class IssuerApp {
     }
 
     async issueCredential() {
+        console.log('Issue Credential button clicked');
+        
         const form = document.getElementById('issueForm');
         if (!form.checkValidity()) {
+            console.log('Form validation failed');
             form.reportValidity();
             return;
         }
@@ -389,6 +392,8 @@ class IssuerApp {
         const subjectDID = document.getElementById('subjectDID').value;
         const credentialType = document.getElementById('credentialType').value;
         const expirationDate = document.getElementById('expirationDate').value;
+        
+        console.log('Form data:', { subjectDID, credentialType, expirationDate });
         
         const credentialSubject = { id: subjectDID };
         const fieldsContainer = document.getElementById('credentialFields');
@@ -407,14 +412,24 @@ class IssuerApp {
             expirationDate: new Date(expirationDate).toISOString()
         };
 
+        console.log('Request data:', requestData);
+        console.log('API URL:', `${this.apiUrl}/credentials/issue`);
+
         try {
+            this.showLoading(true);
+            console.log('Sending request...');
+            
             const response = await fetch(`${this.apiUrl}/credentials/issue`, {
                 method: 'POST',
                 headers: this.getAuthHeaders(),
                 body: JSON.stringify(requestData)
             });
 
+            console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
             const data = await response.json();
+            console.log('Response data:', data);
             
             if (data.success) {
                 this.showSuccess('Credential issued successfully!');
@@ -424,11 +439,27 @@ class IssuerApp {
                 this.setDefaultExpirationDate();
                 await this.loadCredentials();
             } else {
+                console.error('Server error:', data.error);
                 this.showError(data.error || 'Failed to issue credential');
             }
         } catch (error) {
             console.error('Error issuing credential:', error);
-            this.showError('Failed to issue credential');
+            
+            // Extract meaningful error message
+            let errorMessage = 'Failed to issue credential';
+            if (error.message) {
+                if (error.message.includes('DID does not exist') || error.message.includes('DID is not registered')) {
+                    errorMessage = 'DID is not registered. Please register the DID first in the Wallet service.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Cannot connect to server. Please check if the service is running.';
+                } else {
+                    errorMessage = `Error: ${error.message}`;
+                }
+            }
+            
+            this.showError(errorMessage);
+        } finally {
+            this.showLoading(false);
         }
     }
 
@@ -553,6 +584,10 @@ function viewCredential(credentialId) {
 
 function revokeCredential(credentialId) {
     app.revokeCredential(credentialId);
+}
+
+function issueCredential() {
+    app.issueCredential();
 }
 
 // Initialize the app

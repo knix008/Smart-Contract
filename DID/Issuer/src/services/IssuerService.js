@@ -253,7 +253,27 @@ class IssuerService {
       // Issue on blockchain
       const issueResult = await this.issueCredentialOnChain(credentialId, verifiableCredential, signature);
       if (!issueResult.success) {
-        return issueResult;
+        // Extract meaningful error message
+        let errorMessage = 'Failed to issue credential on blockchain';
+        if (issueResult.error) {
+          if (issueResult.error.includes('DID does not exist')) {
+            errorMessage = 'DID is not registered. Please register the DID first in the Wallet service.';
+          } else if (issueResult.error.includes('insufficient funds')) {
+            errorMessage = 'Insufficient funds to complete transaction.';
+          } else if (issueResult.error.includes('execution reverted')) {
+            errorMessage = 'Smart contract execution failed. Please check your inputs.';
+          } else {
+            // Extract only the first part of the error message
+            const shortError = issueResult.error.split('(')[0].trim();
+            errorMessage = `Blockchain error: ${shortError}`;
+          }
+        }
+        
+        console.log(`❌ Credential issue failed: ${errorMessage}`);
+        return {
+          success: false,
+          error: errorMessage
+        };
       }
 
       return {
@@ -265,10 +285,26 @@ class IssuerService {
         }
       };
     } catch (error) {
-      console.error('Error in complete credential issuance:', error);
+      // Extract meaningful error message
+      let errorMessage = 'Failed to issue credential';
+      if (error.message) {
+        if (error.message.includes('DID does not exist')) {
+          errorMessage = 'DID is not registered. Please register the DID first in the Wallet service.';
+        } else if (error.message.includes('insufficient funds')) {
+          errorMessage = 'Insufficient funds to complete transaction.';
+        } else if (error.message.includes('execution reverted')) {
+          errorMessage = 'Smart contract execution failed. Please check your inputs.';
+        } else {
+          // Extract only the first part of the error message
+          const shortError = error.message.split('(')[0].trim();
+          errorMessage = `Error: ${shortError}`;
+        }
+      }
+      
+      console.error(`❌ Error issuing credential: ${errorMessage}`);
       return {
         success: false,
-        error: error.message
+        error: errorMessage
       };
     }
   }
