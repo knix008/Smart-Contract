@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Wallet</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Ethereum Wallet</h1>
+            <p class="subtitle">Manage your Ethereum accounts and transactions</p>
+        </header>
+
+        <div class="wallet-section">
+            <h2>Wallet Management</h2>
+            
+            <div class="action-buttons">
+                <button id="createAccount" class="btn btn-primary">Create New Account</button>
+                <button id="importAccount" class="btn btn-secondary">Import Account (Private Key)</button>
+            </div>
+
+            <div id="accountInfo" class="account-info">
+                <h3>Check Balance</h3>
+                <div class="form-group">
+                    <label for="addressInput">Ethereum Address:</label>
+                    <div class="address-input-group">
+                        <input type="text" id="addressInput" placeholder="0x..." class="address-input">
+                        <button id="checkBalance" class="btn btn-primary">Check Balance</button>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Network:</label>
+                    <div class="network-value" id="currentNetwork">Sepolia Testnet</div>
+                </div>
+                <div class="info-item">
+                    <label>Balance:</label>
+                    <div class="balance-value" id="balance">-</div>
+                    <button id="refreshBalance" class="btn btn-small">Refresh</button>
+                </div>
+                <div class="info-item" id="addressDisplayContainer" style="display: none;">
+                    <label>Address:</label>
+                    <div class="address-value" id="walletAddress">-</div>
+                    <button id="copyAddress" class="btn btn-small">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-section">
+            <h2>Send Transaction</h2>
+            
+            <div class="network-selector">
+                <label for="network">Network:</label>
+                <select id="network">
+                    <option value="mainnet">Ethereum Mainnet</option>
+                    <option value="sepolia" selected>Sepolia Testnet</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="recipient">Recipient Address:</label>
+                <input type="text" id="recipient" placeholder="0x...">
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (ETH):</label>
+                <input type="number" id="amount" step="0.000001" placeholder="0.0">
+            </div>
+
+            <div class="transaction-actions">
+                <button id="signTransaction" class="btn btn-success">Sign Transaction</button>
+                <button id="sendTransaction" class="btn btn-primary">Send Transaction</button>
+            </div>
+
+            <div id="transactionResult" class="transaction-result hidden"></div>
+        </div>
+
+        <div class="transaction-history">
+            <h2>Transaction History</h2>
+            <div id="historyContainer">
+                <p class="no-history">No transactions yet</p>
+            </div>
+        </div>
+
+        <div class="warning-section">
+            <p>⚠️ <strong>Security Warning:</strong> This is a demo wallet. Never use this in production without proper security measures. Private keys are stored in browser memory only.</p>
+        </div>
+    </div>
+</body>
+</html>
